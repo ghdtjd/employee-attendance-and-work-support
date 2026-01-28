@@ -2,12 +2,14 @@ package com.teamproject.workhub.entity.userEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
 
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -35,9 +37,6 @@ public class User {
 
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
-
-
-
 
 
 
