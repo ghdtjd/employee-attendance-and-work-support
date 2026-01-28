@@ -1,4 +1,4 @@
-package com.teamproject.workhub.controller.taskController;
+package com.teamproject.workhub.controller.TaskController;
 
 import org.springframework.web.bind.annotation.RestController;
 
