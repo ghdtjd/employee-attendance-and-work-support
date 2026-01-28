@@ -23,7 +23,7 @@ public class RegisterRequest {
 
     public User toEntity() {
         return User.builder()
-                .emplyoeeNo(employeeNo)
+                .employeeNo(employeeNo)
                 .password(password)
                 .role(Role.USER)
                 .isActive(true)
