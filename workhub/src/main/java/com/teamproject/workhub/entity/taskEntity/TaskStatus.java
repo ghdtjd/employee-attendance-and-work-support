@@ -1,4 +1,4 @@
-package com.teamproject.workhub.entity.userEntity;
+package com.teamproject.workhub.entity.taskEntity;
 
 public enum TaskStatus {TODO("未着手"),
     IN_PROGRESS("進行中"),

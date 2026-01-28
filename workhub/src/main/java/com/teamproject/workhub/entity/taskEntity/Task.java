@@ -1,4 +1,4 @@
-package com.teamproject.workhub.entity.userEntity;
+package com.teamproject.workhub.entity.taskEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
