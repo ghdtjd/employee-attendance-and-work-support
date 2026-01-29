@@ -15,14 +15,15 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Table(name = "employee")
 public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "employeeId")
     private Long id;
 
 
@@ -34,13 +35,16 @@ public class Employee {
     @JoinColumn(name = "departNo")
     private  Department department;
 
-    @Column(name = "employeeNo", nullable = false, unique = true)
+    @Column(name = "employeeNo" , nullable = false, unique = true)
     private String employeeNo;
 
     @Column(nullable = false)
     private String name;
+
     private String email;
+
     private String phone;
+
 
     @Column(name = "position")
     private String position;
@@ -54,10 +58,6 @@ public class Employee {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
-
-
-
 
 
 

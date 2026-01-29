@@ -14,20 +14,12 @@ public class RegisterRequest {
     private String employeeNo;
     private String name;
 
+
     private String password;
     private Long departNo;
     private String email;
     private String phone;
     private String position;
     private LocalDate joinDate;
-
-    public User toEntity() {
-        return User.builder()
-                .employeeNo(employeeNo)
-                .password(password)
-                .role(Role.USER)
-                .isActive(true)
-                .mustChangepassword(true)
-                .build();
-    }
 }
+
