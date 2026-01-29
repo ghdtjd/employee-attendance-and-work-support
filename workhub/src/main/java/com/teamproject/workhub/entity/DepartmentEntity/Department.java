@@ -36,4 +36,8 @@ public class Department {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Employee manager_id;
+
+
+
+
 }
