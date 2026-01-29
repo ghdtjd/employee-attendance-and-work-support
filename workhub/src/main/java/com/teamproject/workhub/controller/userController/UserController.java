@@ -1,10 +1,16 @@
 package com.teamproject.workhub.controller.userController;
 
+import com.teamproject.workhub.dto.userDto.LoginRequest;
 import com.teamproject.workhub.dto.userDto.RegisterRequest;
+import com.teamproject.workhub.entity.userEntity.User;
 import com.teamproject.workhub.repository.EmployeeRepository.EmployeeRepository;
 import com.teamproject.workhub.service.userService.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,5 +35,25 @@ public class UserController {
     }
 
 
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+        User user = userService.login(loginRequest);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute("loginUser", user);
+
+        return ResponseEntity.ok("로그인 성공!");
+
+    }
+
+
 
 }
+
+
+

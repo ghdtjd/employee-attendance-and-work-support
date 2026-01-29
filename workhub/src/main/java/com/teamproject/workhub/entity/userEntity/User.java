@@ -39,5 +39,9 @@ public class User {
     private LocalDateTime lastLogin;
 
 
+    public void updateLastLogin() {
+        this.lastLogin = LocalDateTime.now();
+    }
+
 
 }

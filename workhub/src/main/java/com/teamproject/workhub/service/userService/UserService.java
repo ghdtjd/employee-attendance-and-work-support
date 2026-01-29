@@ -2,6 +2,7 @@ package com.teamproject.workhub.service.userService;
 
 
 import com.teamproject.workhub.dto.employeeDto.EmployeeRequest;
+import com.teamproject.workhub.dto.userDto.LoginRequest;
 import com.teamproject.workhub.dto.userDto.RegisterRequest;
 import com.teamproject.workhub.entity.DepartmentEntity.Department;
 import com.teamproject.workhub.entity.employeeEntity.Employee;
@@ -59,6 +60,22 @@ public class UserService {
 
 
     }
+
+    //2. 사원 로그인 (성공 시 시간 업데이트)
+
+    @Transactional
+    public User login(LoginRequest request) {
+
+        User user = userRepository.findByEmployeeNo(request.getEmployeeNo()).orElse(null);
+
+        if (user == null || passwordEncoder.matches(request.getPassword(), user.getPassword()) || !user.isActive()) {
+            return null;
+        }
+
+        user.updateLastLogin();
+        return user;
+    }
+
 
 
 }
