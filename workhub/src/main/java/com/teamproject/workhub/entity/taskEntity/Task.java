@@ -47,4 +47,8 @@ public class Task {
             this.status = TaskStatus.TODO;
         }
     }
+
+    public void updateStatus(TaskStatus newStatus) {
+        this.status = newStatus;
+    }
 }
