@@ -1,0 +1,18 @@
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "employeeNo" : "EMP001",
+  "password" : "1111"
+}
+
+###
+GET http://localhost:8080/api/userinfo/me
+Accept: application/json
+
+###
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
