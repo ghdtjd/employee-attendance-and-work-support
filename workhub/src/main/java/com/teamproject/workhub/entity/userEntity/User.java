@@ -37,7 +37,7 @@ public class User {
     private boolean mustChangePassword = true;
 
     @Column(name = "last_login")
-    private LocalDateTime lastLoign;
+    private LocalDateTime lastLogin;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -48,7 +48,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     public void updateLastLogin(){
-        this.lastLoign = LocalDateTime.now();
+        this.lastLogin = LocalDateTime.now();
     }
 
 
