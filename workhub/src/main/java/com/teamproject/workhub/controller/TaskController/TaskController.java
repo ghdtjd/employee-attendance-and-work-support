@@ -1,14 +1,19 @@
 package com.teamproject.workhub.controller.TaskController;
 
+import com.teamproject.workhub.dto.taskDto.TaskCreateRequest;
+import com.teamproject.workhub.entity.taskEntity.Task;
 import com.teamproject.workhub.service.taskService.TaskService;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/tasks")
+@RequestMapping("/api/task")
 public class TaskController {
 
     private final TaskService taskService;
@@ -30,6 +35,13 @@ public class TaskController {
     // TODO: GET    /tasks            작업 목록 조회
     // TODO: GET    /tasks/{taskId}   작업 상세 조회
     // TODO: POST   /tasks            작업 등록
+    @PostMapping
+    public Task createTask(@RequestBody TaskCreateRequest request) {
+        return taskService.createTask(
+                request.getTitle(),
+                request.getDescription()
+        );
+    }
     // TODO: PUT    /tasks/{taskId}   작업 수정
     // TODO: DELETE /tasks/{taskId}   작업 삭제
 }
