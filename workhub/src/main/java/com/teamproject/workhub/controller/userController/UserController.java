@@ -1,6 +1,7 @@
 package com.teamproject.workhub.controller.userController;
 
 import com.teamproject.workhub.dto.userDto.LoginRequest;
+import com.teamproject.workhub.dto.userDto.PasswordRequest;
 import com.teamproject.workhub.dto.userDto.RegisterRequest;
 import com.teamproject.workhub.entity.employeeEntity.Employee;
 import com.teamproject.workhub.entity.userEntity.User;
@@ -95,13 +96,25 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // Password 변경 (패스워드 변경 안되어 있으면 변경하는 form이 뜨게)
-  /*
-   @PostMapping("/change/password")
-    public ResponseEntity<String> ChangePassword(@RequestBody PasswordRequest request) {
+    // Password 초기화
 
-    };
-*/
+   @PutMapping("/reset/password")
+    public String resetPassword(HttpServletRequest  request){
+       HttpSession session = request.getSession();
+
+       User loginUser = (User) session.getAttribute("userId");
+
+       System.out.println("세션 ID: " + session.getId());
+       System.out.println("userId: " + session.getAttribute("userId"));
+
+        if(userId == null ) {
+            return "로그인이 필요합니다.!";
+        }
+
+
+        return userService.resetPassword(loginUser.getId());
+    }
+
 }
 
 

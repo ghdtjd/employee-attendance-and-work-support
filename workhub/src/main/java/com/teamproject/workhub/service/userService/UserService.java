@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +31,8 @@ public class UserService {
     // 1. 사원 등록 (무조건 USER, 비번 1111)
 
     @jakarta.transaction.Transactional
-    public void registerUser(RegisterRequest request){
-        if(userRepository.existsByEmployeeNo(request.getEmployeeNo())){
+    public void registerUser(RegisterRequest request) {
+        if (userRepository.existsByEmployeeNo(request.getEmployeeNo())) {
             throw new IllegalArgumentException("이미 존재하는 사번입니다.");
         }
 
@@ -66,7 +68,7 @@ public class UserService {
     // 나중에 비밀번호 변경
 
     @jakarta.transaction.Transactional
-    public User login(LoginRequest request){
+    public User login(LoginRequest request) {
         User user = userRepository.findByEmployeeNo(request.getEmployeeNo()).orElse(null);
 
         if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword()) || !user.isActive()) {
@@ -77,23 +79,24 @@ public class UserService {
     }
 
 
-    // 초기 비밀번호 변경 로직
-    @Transactional
-    public void updatePassword(Long userId, String oldPassword, String newPassword){
-
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    // 비밀번호 초기화
+    public String resetPassword(Long id) {
+        Optional<User> user = userRepository.findById(id);
 
 
-        if(!passwordEncoder.matches(oldPassword, user.getPassword())){
-            throw new RuntimeException("기본 비밀번호가 일치하지 않습니다.");
-
+        if (user.isPresent()) {
+            User userPassword = user.get();
+            userPassword.setPassword(passwordEncoder.encode("0000"));
+            userRepository.save(userPassword);
+            return "비밀번호가 0000으로 초기화되었습니다.";
+        } else {
+            return "해당하는 유저가 없습니다.";
         }
 
-        // 새 비밀번호 암호화 및 저장
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        user.setPassword(encodedPassword);
-        userRepository.save(user);
     }
+
+
+
 
 
 
