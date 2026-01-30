@@ -1,4 +1,4 @@
-package com.teamproject.workhub.controller.taskController;
+package com.teamproject.workhub.controller.TaskController;
 
 import com.teamproject.workhub.service.taskService.TaskService;
 import lombok.RequiredArgsConstructor;
