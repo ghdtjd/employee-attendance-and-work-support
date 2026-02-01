@@ -6,6 +6,7 @@ import com.teamproject.workhub.dto.userDto.RegisterRequest;
 import com.teamproject.workhub.entity.employeeEntity.Employee;
 import com.teamproject.workhub.entity.userEntity.User;
 import com.teamproject.workhub.repository.EmployeeRepository.EmployeeRepository;
+import com.teamproject.workhub.service.employeeService.EmployeeService;
 import com.teamproject.workhub.service.userService.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,6 +29,7 @@ public class UserController {
 
     private final UserService userService;
     private final EmployeeRepository employeeRepository;
+
 
     // 관리자: 사원 등록
     @PostMapping("/admin/register")
@@ -92,9 +95,19 @@ public class UserController {
         response.put("email", employee.getEmail());
         response.put("phone", employee.getPhone());
         response.put("position", employee.getPosition());
+        response.put("joinDate", employee.getJoinDate());
 
         return ResponseEntity.ok(response);
     }
+
+    //사원 전체 조회
+
+    @GetMapping("/admin/employees")
+    public List<Employee> getEmployeeList() {
+        return userService.getAllEmployee();
+    }
+
+
 
     // Password 초기화
 
@@ -107,7 +120,7 @@ public class UserController {
        System.out.println("세션 ID: " + session.getId());
        System.out.println("userId: " + session.getAttribute("userId"));
 
-        if(userId == null ) {
+        if(loginUser == null ) {
             return "로그인이 필요합니다.!";
         }
 

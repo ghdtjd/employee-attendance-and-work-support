@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -77,6 +78,15 @@ public class UserService {
         user.updateLastLogin(); // 마지막 로그인 시간 갱신
         return user;
     }
+
+
+    // 전체 사원 목록
+
+    public List<Employee> getAllEmployee() {
+        return employeeRepository.findAll();
+    }
+
+
 
 
     // 비밀번호 초기화
