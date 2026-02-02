@@ -12,7 +12,14 @@ Accept: application/json
 
 ###
 ### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=IntelliJ IDEA
+
+PUT http://localhost:8080/api/userinfo/me
+Content-Type: application/json
+
+{
+  "email" : "new@example.com",
+  "phone" : "010-9999-8888"
+
+}
 
 ###

@@ -60,5 +60,12 @@ public class Employee {
     private LocalDateTime createdAt;
 
 
-
+    public void updateMyInfo(String email, String phone) {
+        if (email != null && !email.isBlank()) {
+            this.email = email;
+        }
+        if (phone != null && !phone.isBlank()) {
+            this.phone = phone;
+        }
+        }
 }
