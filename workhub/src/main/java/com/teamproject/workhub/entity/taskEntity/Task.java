@@ -16,13 +16,13 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "employeeId")
+    @Column(name = "employeeId", nullable = true)
     private Long employeeId;
 
-    @Column(name = "UserId")
+    @Column(name = "UserId", nullable = true)
     private Long userId;
 
-    @Column(name = "departNo")
+    @Column(name = "departNo", nullable = true)
     private Long departNo;
 
     @Column(length = 255)
