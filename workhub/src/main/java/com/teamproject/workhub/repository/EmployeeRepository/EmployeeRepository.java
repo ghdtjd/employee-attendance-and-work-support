@@ -1,6 +1,7 @@
 package com.teamproject.workhub.repository.EmployeeRepository;
 
 import com.teamproject.workhub.entity.employeeEntity.Employee;
+import com.teamproject.workhub.entity.userEntity.Role;
 import com.teamproject.workhub.entity.userEntity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,6 +12,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Optional<Employee> findByUser(User user);
 
-    List<Employee> user(User user);
 
+    List<Employee> user(User user);
 }
