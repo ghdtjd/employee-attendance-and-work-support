@@ -111,22 +111,10 @@ public class UserController {
 
     // Password 초기화
 
-   @PutMapping("/reset/password")
-    public String resetPassword(HttpServletRequest  request){
-       HttpSession session = request.getSession();
+   @PostMapping ("/password/reset/{employeeId") {
 
-       User loginUser = (User) session.getAttribute("userId");
+   }
 
-       System.out.println("세션 ID: " + session.getId());
-       System.out.println("userId: " + session.getAttribute("userId"));
-
-        if(loginUser == null ) {
-            return "로그인이 필요합니다.!";
-        }
-
-
-        return userService.resetPassword(loginUser.getId());
-    }
 
 }
 
