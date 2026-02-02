@@ -88,7 +88,6 @@ public class UserService {
     }
 
 
-
     // 비밀번호 초기화
     public String resetPassword(Long id) {
         Optional<User> user = userRepository.findById(id);
@@ -105,11 +104,24 @@ public class UserService {
 
     }
 
+    //비밀번호 변경 (본인만 가능)
+    @jakarta.transaction.Transactional
+    public void changePassword(User loginUser, String currentPassword, String newPassword) {
 
+        User user = userRepository.findById(loginUser.getId())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
 
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new IllegalArgumentException("새 비밀번호는 현재 비밀번호와 달라야 합니다.");
+        }
 
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        user.changePassword(encodedNewPassword);
 
-
-
+        loginUser.setMustChangePassword(false);
+    }
 }

@@ -2,8 +2,8 @@ POST http://localhost:8080/api/login
 Content-Type: application/json
 
 {
-  "employeeNo" : "BA0120",
-  "password" : "1111"
+  "employeeNo" : "EMP001",
+  "password" : "2222"
 }
 
 ###
@@ -18,8 +18,16 @@ Content-Type: application/json
 
 {
   "email" : "new@example.com",
-  "phone" : "010-9999-8888"
+  "phone" : "010-9999-0000"
 
+}
+###
+PUT http://localhost:8080/api/userinfo/password
+Content-Type: application/json
+
+{
+  "currentPassword": "1111",
+  "newPassword": "2222"
 }
 
 ###

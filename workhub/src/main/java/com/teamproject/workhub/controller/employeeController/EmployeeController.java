@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.teamproject.workhub.dto.userDto.PasswordChangeDto;
+import com.teamproject.workhub.service.userService.UserService;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class EmployeeController {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeService employeeService;
+    private final UserService userService;
 
     // 내 정보 조회
     @GetMapping("/me")
@@ -55,5 +58,31 @@ public class EmployeeController {
         employeeService.updateMyInfo(loginUser, updateDto);
 
         return ResponseEntity.ok("내 정보가 수정되었습니다.");
+    }
+
+    // 비밀번호 변경
+    @PutMapping("/password")
+    public ResponseEntity<String> changePassword(
+            @RequestBody PasswordChangeDto passwordChangeDto,
+            HttpServletRequest request) {
+
+        // 세션에서 로그인한 사용자 정보 가져오기
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loginUser") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+        User loginUser = (User) session.getAttribute("loginUser");
+
+        try {
+            // UserService에서 비밀번호 변경 처리
+            userService.changePassword(
+                    loginUser,
+                    passwordChangeDto.getCurrentPassword(),
+                    passwordChangeDto.getNewPassword()
+            );
+            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
