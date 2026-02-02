@@ -2,8 +2,8 @@ POST http://localhost:8080/api/login
 Content-Type: application/json
 
 {
-  "employeeNo" : "EMP001",
-  "password" : "2222"
+  "employeeNo" : "BA0119",
+  "password" : "1111"
 }
 
 ###
@@ -17,8 +17,8 @@ PUT http://localhost:8080/api/userinfo/me
 Content-Type: application/json
 
 {
-  "email" : "new@example.com",
-  "phone" : "010-9999-0000"
+  "email" : "rhksflwk@me.com",
+  "phone" : "010-9999-1234"
 
 }
 ###
@@ -69,3 +69,24 @@ Content-Type: application/json
   "status": "IN_PROGRESS",
   "priority": 1
 }
+GET http://localhost:8080/api/attendance/me
+
+###
+GET http://localhost:8080/api/attendance/me/api/attendance/me/period?startDate=2026-01-01&endDate=2026-01-31
+
+###
+POST http://localhost:8080/api/attendance/check-in
+Content-Type: application/json
+
+{
+  "notes": "정상 출근"
+}
+
+###
+GET http://localhost:8080/api/attendance/today
+
+###
+POST http://localhost:8080/api/attendance/check-out
+
+###
+GET http://localhost:8080/api/attendance/me
