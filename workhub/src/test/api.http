@@ -43,6 +43,44 @@ Content-Type: application/json
 }
 
 ###
+GET http://localhost:8080/api/task
+Content-Type: application/json
+
+{
+   "id": 1,
+    "employeeId": null,
+    "userId": null,
+    "departNo": null,
+    "title": "첫 번째 업무",
+    "description": "업무 설명",
+    "status": "TODO",
+    "priority": null,
+    "createdAt": "2026-01-30T10:30:00"
+}
+
+###
+GET http://localhost:8080/api/task/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "첫 번째 업무",
+  "description": "업무 설명",
+  "status": "TODO",
+  "createdAt": "2026-01-30T10:30:00"
+}
+
+### **4. 테스트**
+
+PUT http://localhost:8080/api/task/1
+Content-Type: application/json
+
+{
+  "title": "수정된 업무 제목",
+  "description": "수정된 설명",
+  "status": "IN_PROGRESS",
+  "priority": 1
+}
 GET http://localhost:8080/api/attendance/me
 
 ###
