@@ -1,8 +1,20 @@
+POST http://localhost:8080/api/board/add?id=7
+Content-Type: application/json
+
+
+{
+  "title" : "공지사항 등록!",
+  "content" : "공지사항 등록 테스트",
+  "importance": "NORMAL"
+}
+
+
+###
 POST http://localhost:8080/api/login
 Content-Type: application/json
 
 {
-  "employeeNo" : "BA0119",
+  "employeeNo" : "BA0118",
   "password" : "1111"
 }
 
@@ -17,8 +29,8 @@ PUT http://localhost:8080/api/userinfo/me
 Content-Type: application/json
 
 {
-  "email" : "rhksflwk@me.com",
-  "phone" : "010-9999-1234"
+  "email" : "rjswh@rjswh.com",
+  "phone" : "010-4535-4445"
 
 }
 ###
@@ -26,8 +38,8 @@ PUT http://localhost:8080/api/userinfo/password
 Content-Type: application/json
 
 {
-  "currentPassword": "1111",
-  "newPassword": "2222"
+  "currentPassword": "2222",
+  "newPassword": "r1r2r3r4"
 }
 
 ###
@@ -90,3 +102,10 @@ POST http://localhost:8080/api/attendance/check-out
 
 ###
 GET http://localhost:8080/api/attendance/me
+
+
+POST
+
+Content-Type: application/json
+
+
