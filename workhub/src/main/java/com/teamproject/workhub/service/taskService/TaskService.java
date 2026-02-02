@@ -1,11 +1,14 @@
 package com.teamproject.workhub.service.taskService;
 
+import com.teamproject.workhub.dto.taskDto.TaskUpdateRequest;
 import com.teamproject.workhub.entity.taskEntity.Task;
 import com.teamproject.workhub.entity.taskEntity.TaskStatus;
 import com.teamproject.workhub.repository.taskRepository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,31 @@ public class TaskService {
         task.updateStatus(newStatus);
 
         return task;
+    }
+
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
+    }
+
+    // 업무 상세 조회
+    public Task getTaskById(Long taskId) {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("タスクが見つかりません: " + taskId));
+    }
+
+    // 업무 수정
+    @Transactional
+    public Task updateTask(Long taskId, TaskUpdateRequest request) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("タスクが見つかりません: " + taskId));
+
+
+        task.setTitle(request.getTitle());
+        task.setDescription(request.getDescription());
+        task.setStatus(request.getStatus());
+        task.setPriority(request.getPriority());
+
+        return task; // @Transactional에 의해 자동 저장됨
     }
 
 }

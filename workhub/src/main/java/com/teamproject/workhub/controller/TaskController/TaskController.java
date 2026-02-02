@@ -1,15 +1,16 @@
-package com.teamproject.workhub.controller.TaskController;
+package com.teamproject.workhub.controller.taskController;
 
 import com.teamproject.workhub.dto.taskDto.TaskCreateRequest;
+import com.teamproject.workhub.dto.taskDto.TaskResponseDto;
+import com.teamproject.workhub.dto.taskDto.TaskUpdateRequest;
 import com.teamproject.workhub.entity.taskEntity.Task;
 import com.teamproject.workhub.service.taskService.TaskService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,11 +30,21 @@ public class TaskController {
         return "TaskController OK";
     }
 
-    // =========================
-    // TODO (기능은 하나씩 붙일 것)
-    // =========================
+
     // TODO: GET    /tasks            작업 목록 조회
+    @GetMapping
+    public List<TaskResponseDto> getAllTasks() {
+        List<Task> tasks = taskService.getAllTasks();
+        return tasks.stream()
+                .map(TaskResponseDto::from)
+                .collect(Collectors.toList());
+    }
     // TODO: GET    /tasks/{taskId}   작업 상세 조회
+    @GetMapping("/{taskId}")
+    public TaskResponseDto getTaskById(@PathVariable Long taskId) {
+        Task task = taskService.getTaskById(taskId);
+        return TaskResponseDto.from(task);
+    }
     // TODO: POST   /tasks            작업 등록
     @PostMapping
     public Task createTask(@RequestBody TaskCreateRequest request) {
@@ -43,5 +54,12 @@ public class TaskController {
         );
     }
     // TODO: PUT    /tasks/{taskId}   작업 수정
+    @PutMapping("/{taskId}")
+    public TaskResponseDto updateTask(
+            @PathVariable Long taskId,
+            @RequestBody TaskUpdateRequest request) {
+        Task updatedTask = taskService.updateTask(taskId, request);
+        return TaskResponseDto.from(updatedTask);
+    }
     // TODO: DELETE /tasks/{taskId}   작업 삭제
 }
