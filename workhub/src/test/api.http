@@ -31,3 +31,24 @@ Content-Type: application/json
 }
 
 ###
+GET http://localhost:8080/api/attendance/me
+
+###
+GET http://localhost:8080/api/attendance/me/api/attendance/me/period?startDate=2026-01-01&endDate=2026-01-31
+
+###
+POST http://localhost:8080/api/attendance/check-in
+Content-Type: application/json
+
+{
+  "notes": "정상 출근"
+}
+
+###
+GET http://localhost:8080/api/attendance/today
+
+###
+POST http://localhost:8080/api/attendance/check-out
+
+###
+GET http://localhost:8080/api/attendance/me
