@@ -133,3 +133,6 @@ Content-Type: application/json
 ###
 GET http://localhost:8080/api/task
 
+###
+GET http://localhost:8080/api/admin/attendance
+
