@@ -161,4 +161,14 @@ public class AttendanceService {
 
         return AttendanceResponseDto.from(todayAttendances.get(0));
     }
+
+    // 관리자용: 전체 사원 근태 이력 조회
+    @Transactional(readOnly = true)
+    public List<AttendanceResponseDto> getAllAttendance() {
+        List<Attendance> attendances = attendanceRepository.findAll();
+
+        return attendances.stream()
+                .map(AttendanceResponseDto::from)
+                .collect(Collectors.toList());
+    }
 }
