@@ -7,9 +7,11 @@ import com.teamproject.workhub.entity.taskEntity.Task;
 import com.teamproject.workhub.service.taskService.TaskService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -62,4 +64,26 @@ public class TaskController {
         return TaskResponseDto.from(updatedTask);
     }
     // TODO: DELETE /tasks/{taskId}   작업 삭제
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<String> deleteTask(@PathVariable Long taskId) {
+        taskService.deleteTask(taskId);
+        return ResponseEntity.ok("タスクが削除されました");
+    }
+    @PatchMapping("/{taskId}/status")
+    public ResponseEntity<TaskResponseDto> updateTaskStatus(
+            @PathVariable Long taskId,
+            @RequestBody Map<String, String> request) {
+        String status = request.get("status");
+        TaskResponseDto response = taskService.updateTaskStatus(taskId, status);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{taskId}/assignee")
+    public ResponseEntity<TaskResponseDto> updateTaskAssignee(
+            @PathVariable Long taskId,
+            @RequestBody Map<String, Long> request) {
+        Long userId = request.get("userId");
+        TaskResponseDto response = taskService.updateTaskAssignee(taskId, userId);
+        return ResponseEntity.ok(response);
+    }
 }
