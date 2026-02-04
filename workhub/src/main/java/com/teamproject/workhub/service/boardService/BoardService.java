@@ -6,12 +6,15 @@ import com.teamproject.workhub.entity.boardEntity.Board;
 import com.teamproject.workhub.entity.employeeEntity.Employee;
 import com.teamproject.workhub.repository.EmployeeRepository.EmployeeRepository;
 import com.teamproject.workhub.repository.boardRepository.BoardRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.action.internal.EntityActionVetoException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,6 +57,24 @@ public class BoardService {
                 .collect(Collectors.toList());
 
 
+    }
+
+
+    // 게시글 상세 조회
+    public NoticeResponseDTO getBoardDetail(Long id){
+        Board board = boardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
+
+
+        NoticeResponseDTO dto = new NoticeResponseDTO();
+
+        dto.setNoticeId(board.getId());
+        dto.setTitle(board.getTitle());
+        dto.setContent(board.getContent());
+        dto.setImportance(board.getImportance());
+        dto.setCreatedAt(board.getCreatedAt());
+        dto.setPosition(board.getEmployeeId().getPosition());
+
+            return dto;
     }
 
 
