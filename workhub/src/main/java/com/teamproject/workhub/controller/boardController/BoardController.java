@@ -43,4 +43,14 @@ public class BoardController {
     }
 
 
+    // 게시글 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<NoticeResponseDTO> getDetail(@PathVariable Long id) {
+
+        NoticeResponseDTO response = boardService.getBoardDetail(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+
 }
