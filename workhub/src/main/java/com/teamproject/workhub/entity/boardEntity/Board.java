@@ -26,10 +26,7 @@ public class Board {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employeeId")  // DB 컬럼명
-    private Employee employee;
-
-    @Column(nullable = false)
-    private String departNo;
+    private Employee employeeId;
 
     @Column(nullable = false)
     private String title;
