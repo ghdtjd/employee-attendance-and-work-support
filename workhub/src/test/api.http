@@ -1,11 +1,19 @@
-POST http://localhost:8080/api/board/add?id=7
+GET http://localhost:8080/api/board/list
+Accept: application/json
+
+
+
+
+###
+POST http://localhost:8080/api/board/add
 Content-Type: application/json
 
 
 {
-  "title" : "공지사항 등록!",
-  "content" : "공지사항 등록 테스트",
-  "importance": "NORMAL"
+  "employeeId": 7,
+  "title": "테스트 공지",
+  "content": "테스트 내용",
+  "importance": "HIGH"
 }
 
 

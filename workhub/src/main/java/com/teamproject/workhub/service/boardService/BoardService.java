@@ -1,6 +1,7 @@
 package com.teamproject.workhub.service.boardService;
 
 import com.teamproject.workhub.dto.noticeDto.NoticeRequestDTO;
+import com.teamproject.workhub.dto.noticeDto.NoticeResponseDTO;
 import com.teamproject.workhub.entity.boardEntity.Board;
 import com.teamproject.workhub.entity.employeeEntity.Employee;
 import com.teamproject.workhub.repository.EmployeeRepository.EmployeeRepository;
@@ -8,6 +9,10 @@ import com.teamproject.workhub.repository.boardRepository.BoardRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,14 +23,13 @@ public class BoardService {
 
 
     @Transactional
-    public void createNotice(NoticeRequestDTO dto) {
-        // 1. 로그인한 사용자의 Employee 찾기
-        Employee employee = employeeRepository.findByName(dto.getName())
-                .orElseThrow(() -> new RuntimeException("직원 정보를 찾을 수 없습니다."));
+    public void createNotice(@RequestBody  NoticeRequestDTO dto) {
+
+        Employee employee = employeeRepository.findById(dto.getEmployeeId()).orElseThrow(() -> new RuntimeException("직원 정보를 찾을 수 없습니다." + dto.getEmployeeId()));
 
         // 2. Notice 생성
         Board board = Board.builder()
-                .employee(employee)
+                .employeeId(employee)
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .importance(dto.getImportance())
@@ -36,5 +40,21 @@ public class BoardService {
 
 
     }
+
+
+    // 게시글 전체 조회
+
+    public List<NoticeResponseDTO> getAllBoards() {
+
+        List<Board> boards = boardRepository.findAllByOrderByCreatedAtDesc();
+
+
+        return boards.stream()
+                .map(NoticeResponseDTO::new)
+                .collect(Collectors.toList());
+
+
+    }
+
 
 }

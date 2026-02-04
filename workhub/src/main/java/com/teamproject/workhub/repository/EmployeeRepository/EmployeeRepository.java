@@ -13,7 +13,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Optional<Employee> findByUser(User user);
 
-    Optional<Employee> findByEmployeeNo(Long id);
+    Optional<Employee> findByEmployeeNo(String employeeNo);
 
     Optional<Employee> findByName(String name);
 }
