@@ -2,6 +2,7 @@ package com.teamproject.workhub.entity.employeeEntity;
 
 
 import com.teamproject.workhub.entity.DepartmentEntity.Department;
+import com.teamproject.workhub.entity.userEntity.Role;
 import com.teamproject.workhub.entity.userEntity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,10 @@ public class Employee {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", nullable = false)
     private User user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role = Role.USER;
 
     @ManyToOne
     @JoinColumn(name = "departNo")
