@@ -2,6 +2,7 @@ package com.teamproject.workhub.entity.boardEntity;
 
 
 import com.teamproject.workhub.entity.employeeEntity.Employee;
+import com.teamproject.workhub.entity.userEntity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,10 @@ public class Board {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employeeId")  // DB 컬럼명
     private Employee employeeId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private String title;
