@@ -5,8 +5,10 @@ import com.teamproject.workhub.dto.boardDto.BoardResponseDTO;
 import com.teamproject.workhub.entity.boardEntity.Board;
 import com.teamproject.workhub.entity.employeeEntity.Employee;
 import com.teamproject.workhub.entity.userEntity.Role;
+import com.teamproject.workhub.entity.userEntity.User;
 import com.teamproject.workhub.repository.EmployeeRepository.EmployeeRepository;
 import com.teamproject.workhub.repository.boardRepository.BoardRepository;
+import com.teamproject.workhub.repository.userRepository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,36 +23,35 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
 
 
     @Transactional
-    public Board createNotice(BoardRequestDTO dto, Long CurrentUser) throws Exception {
+    public void createNotice(BoardRequestDTO dto, Long currentUserId) throws Exception {
 
-        Employee employee  = employeeRepository.findById(CurrentUser)
-                .orElseThrow(() -> new RuntimeException("직원 정보를 찾을 수 없습니다." + dto.getEmployeeId()));
+        // 1. User 조회
+        User user = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
 
+        // 2. User의 employeeNo로 Employee 조회
+        Employee employee = employeeRepository.findByEmployeeNo(user.getEmployeeNo())
+                .orElseThrow(() -> new RuntimeException(
+                        "직원 정보를 찾을 수 없습니다. 사번: " + user.getEmployeeNo()));
 
-
+        // 3. 권한 체크
         if(employee.getRole() != Role.ADMIN) {
             throw new Exception("관리자만 게시글 작성이 가능합니다.");
         }
 
-
-
-        // 2. Notice 생성
-
-
-
+        // 4. Board 생성
         Board board = Board.builder()
                 .employeeId(employee)
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .importance(dto.getImportance())
-
                 .build();
-        // 3. 저장
-        return boardRepository.save(board);
 
+        boardRepository.save(board);
     }
 
 
@@ -83,7 +84,7 @@ public class BoardService {
         dto.setImportance(board.getImportance());
         dto.setCreatedAt(board.getCreatedAt());
         dto.setPosition(board.getEmployeeId().getPosition());
-        dto.setEmployeeId();
+
 
             return dto;
     }
