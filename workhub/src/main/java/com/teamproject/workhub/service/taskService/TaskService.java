@@ -1,5 +1,5 @@
 package com.teamproject.workhub.service.taskService;
-
+import java.time.LocalDate;
 import com.teamproject.workhub.dto.taskDto.TaskResponseDto;
 import com.teamproject.workhub.dto.taskDto.TaskUpdateRequest;
 import com.teamproject.workhub.entity.taskEntity.Task;
@@ -18,10 +18,13 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    public Task createTask(String title, String description) {
+    public Task createTask(String title, String description, LocalDate dueDate, Long employeeId, Long userId) {
         Task task = Task.builder()
                 .title(title)
                 .description(description)
+                .dueDate(dueDate)
+                .employeeId(employeeId)
+                .userId(userId)
                 .status(TaskStatus.TODO)
                 .build();
 

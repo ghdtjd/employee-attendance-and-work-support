@@ -2,6 +2,8 @@ package com.teamproject.workhub.entity.taskEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,6 +26,9 @@ public class Task {
 
     @Column(name = "departNo", nullable = true)
     private Long departNo;
+
+    @Column(name = "due_date")
+    private LocalDate dueDate;
 
     @Column(length = 255)
     private String title;
