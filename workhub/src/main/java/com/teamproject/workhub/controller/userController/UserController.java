@@ -92,6 +92,8 @@ public class UserController {
 
         // (주의) user.getEmployeeNo()가 맞는지 확인 필요. 보통은 employee.getEmployeeNo() 일 수 있음.
         // User 엔티티에 employeeNo 필드가 있다면 그대로 두셔도 됩니다.
+        response.put("id", user.getId());                    // ← 이 줄 추가!
+        response.put("employeeId", employee.getId());
         response.put("employeeNo", user.getEmployeeNo());
         response.put("role", user.getRole());
         response.put("name", employee.getName());
