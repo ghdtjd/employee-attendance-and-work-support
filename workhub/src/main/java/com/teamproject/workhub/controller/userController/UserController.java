@@ -30,7 +30,6 @@ public class UserController {
     private final UserService userService;
     private final EmployeeRepository employeeRepository;
 
-
     // 관리자: 사원 등록
     @PostMapping("/admin/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request, Long userId) {
@@ -56,24 +55,23 @@ public class UserController {
         return ResponseEntity.ok("로그인 성공!!");
     }
 
-
     // 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session != null) session.invalidate();
+        if (session != null)
+            session.invalidate();
         return ResponseEntity.ok("로그아웃 성공!!!");
     }
-
 
     // 세션 확인
     @GetMapping("/check-login")
     public ResponseEntity<Map<String, Object>> checkLogin(HttpServletRequest request) {
         System.out.println("================ check-login 요청 들어옴 ================");
 
-        //  세션이 있는지 확인 (false: 없으면 null 반환)
+        // 세션이 있는지 확인 (false: 없으면 null 반환)
         HttpSession session = request.getSession(false);
-        //  세션 안에 유저 정보가 들어있는지 확인
+        // 세션 안에 유저 정보가 들어있는지 확인
         Object loginUserObj = session.getAttribute("loginUser");
 
         // 세션에서 User 객체 형변환
@@ -83,16 +81,12 @@ public class UserController {
         Employee employee = employeeRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
-
-
-
-        //  응답 데이터 구성
+        // 응답 데이터 구성
         Map<String, Object> response = new HashMap<>();
-
 
         // (주의) user.getEmployeeNo()가 맞는지 확인 필요. 보통은 employee.getEmployeeNo() 일 수 있음.
         // User 엔티티에 employeeNo 필드가 있다면 그대로 두셔도 됩니다.
-        response.put("id", user.getId());                    // ← 이 줄 추가!
+        response.put("id", user.getId()); // ← 이 줄 추가!
         response.put("employeeId", employee.getId());
         response.put("employeeNo", user.getEmployeeNo());
         response.put("role", user.getRole());
@@ -102,29 +96,29 @@ public class UserController {
         response.put("position", employee.getPosition());
         response.put("joinDate", employee.getJoinDate());
 
+        if (employee.getDepartment() != null) {
+            response.put("department", employee.getDepartment().getDepartName());
+        } else {
+            response.put("department", "부서 미정");
+        }
+
         return ResponseEntity.ok(response);
     }
 
-    //사원 전체 조회
+    // 사원 전체 조회
 
     @GetMapping("/admin/employees")
     public List<Employee> getEmployeeList() {
         return userService.getAllEmployee();
     }
 
-
-
     // Password 초기화
 
-  /* @PostMapping ("/password/reset/{employeeId") {
-
-   }
-
-   */
-
-
+    /*
+     * @PostMapping ("/password/reset/{employeeId") {
+     * 
+     * }
+     * 
+     */
 
 }
-
-
-

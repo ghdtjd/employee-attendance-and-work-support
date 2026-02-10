@@ -25,24 +25,24 @@ public class Attendance {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employeeId", nullable = false)
+    @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
     @Column(name = "work_date", nullable = false)
-    private LocalDate workDate;  // 근무 날짜
+    private LocalDate workDate; // 근무 날짜
 
     @Column(name = "check_in_time")
-    private LocalTime checkInTime;  // 출근 시간
+    private LocalTime checkInTime; // 출근 시간
 
     @Column(name = "check_out_time")
-    private LocalTime checkOutTime;  // 퇴근 시간
+    private LocalTime checkOutTime; // 퇴근 시간
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private AttendanceStatus status;  // 근태 상태
+    private AttendanceStatus status; // 근태 상태
 
     @Column(name = "notes")
-    private String notes;  // 비고 (사유 등)
+    private String notes; // 비고 (사유 등)
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

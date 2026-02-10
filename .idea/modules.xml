@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/GlobalTeamProject.iml" filepath="$PROJECT_DIR$/.idea/GlobalTeamProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/workhub/workhub.iml" filepath="$PROJECT_DIR$/workhub/workhub.iml" />
     </modules>
   </component>
 </project>

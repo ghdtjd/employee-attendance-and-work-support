@@ -8,7 +8,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
 
-
 @Entity
 @Getter
 @Setter
@@ -21,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 이 부분을 확인하세요!
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "employee_no", nullable = false, unique = true)
     private String employeeNo;
 
     @Column(nullable = false)
@@ -47,12 +46,11 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public void updateLastLogin(){
+    public void updateLastLogin() {
         this.lastLogin = LocalDateTime.now();
     }
 
-
-    public void changePassword(String newPassword){
+    public void changePassword(String newPassword) {
         this.password = newPassword;
     }
 

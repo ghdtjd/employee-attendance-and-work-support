@@ -26,7 +26,7 @@ public class AttendanceService {
 
     // 내 전체 근태 이력 조회
     public List<AttendanceResponseDto> getMyAttendance(User loginUser) {
-        Employee employee = employeeRepository.findByUser(loginUser)
+        Employee employee = employeeRepository.findByUserId(loginUser.getId())
                 .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
         List<Attendance> attendances = attendanceRepository.findByEmployeeOrderByWorkDateDesc(employee);
@@ -40,7 +40,7 @@ public class AttendanceService {
     public List<AttendanceResponseDto> getMyAttendanceByPeriod(
             User loginUser, LocalDate startDate, LocalDate endDate) {
 
-        Employee employee = employeeRepository.findByUser(loginUser)
+        Employee employee = employeeRepository.findByUserId(loginUser.getId())
                 .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
         List<Attendance> attendances = attendanceRepository
@@ -53,7 +53,7 @@ public class AttendanceService {
 
     // 특정 월 근태 조회
     public List<AttendanceResponseDto> getMyAttendanceByMonth(User loginUser, int year, int month) {
-        Employee employee = employeeRepository.findByUser(loginUser)
+        Employee employee = employeeRepository.findByUserId(loginUser.getId())
                 .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
         // 해당 월의 첫날과 마지막날
@@ -73,7 +73,7 @@ public class AttendanceService {
     public List<AttendanceResponseDto> getMyAttendanceByStatus(
             User loginUser, AttendanceStatus status) {
 
-        Employee employee = employeeRepository.findByUser(loginUser)
+        Employee employee = employeeRepository.findByUserId(loginUser.getId())
                 .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
         List<Attendance> attendances = attendanceRepository
@@ -87,7 +87,7 @@ public class AttendanceService {
     // 출근 기록
     @Transactional
     public AttendanceResponseDto checkIn(User loginUser, String notes) {
-        Employee employee = employeeRepository.findByUser(loginUser)
+        Employee employee = employeeRepository.findByUserId(loginUser.getId())
                 .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
         LocalDate today = LocalDate.now();
@@ -118,7 +118,7 @@ public class AttendanceService {
     // 퇴근 기록
     @Transactional
     public AttendanceResponseDto checkOut(User loginUser) {
-        Employee employee = employeeRepository.findByUser(loginUser)
+        Employee employee = employeeRepository.findByUserId(loginUser.getId())
                 .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
         LocalDate today = LocalDate.now();
@@ -147,7 +147,7 @@ public class AttendanceService {
 
     // 오늘 근태 조회
     public AttendanceResponseDto getTodayAttendance(User loginUser) {
-        Employee employee = employeeRepository.findByUser(loginUser)
+        Employee employee = employeeRepository.findByUserId(loginUser.getId())
                 .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
         LocalDate today = LocalDate.now();

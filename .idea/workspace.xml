@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="247a759c-3093-418b-841e-2817af3456f7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React copy/React/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/React copy/React/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React copy/React/src/Components/AttendancePanel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/React copy/React/src/Components/AttendancePanel.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React copy/React/src/Components/ClockButton.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/React copy/React/src/Components/ClockButton.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React copy/React/src/board/BoardAdd.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/React copy/React/src/board/BoardAdd.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React copy/React/src/board/BoardList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/React copy/React/src/board/BoardList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React copy/React/src/page1/home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/React copy/React/src/page1/home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/React copy/React/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/React copy/React/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/public/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/public/logo192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/public/logo512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/public/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/public/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/src/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/src/App.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/src/App.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/src/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/src/reportWebVitals.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub-frontend/src/setupTests.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/workhub/mvnw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/workhub/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub/src/main/java/com/teamproject/workhub/entity/userEntity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/workhub/src/main/java/com/teamproject/workhub/entity/userEntity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub/src/main/java/com/teamproject/workhub/repository/EmployeeRepository/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/workhub/src/main/java/com/teamproject/workhub/repository/EmployeeRepository/EmployeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub/src/main/java/com/teamproject/workhub/service/attendanceService/AttendanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/workhub/src/main/java/com/teamproject/workhub/service/attendanceService/AttendanceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/workhub/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub/src/test/java/com/teamproject/workhub/WorkhubApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/workhub/src/test/java/com/teamproject/workhub/WorkhubApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workhub/src/test/java/com/teamproject/workhub/WorkhubApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HttpClientOnboardingState">{
+  &quot;isOnboardingCommentShown&quot;: true
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="39Obj8to8tHZfviUl3659anNs0u" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.WorkhubApplication.executor": "Run",
+    "HTTP Request.api | #1.executor": "Run",
+    "HTTP Request.api | #4.executor": "Run",
+    "HTTP Request.api-test | #1.executor": "Run",
+    "HTTP Request.api-test | 로그인 테스트 - EMP001.executor": "Run",
+    "HTTP Request.api-test | 로그인 테스트 - 다른 계정 예시.executor": "Run",
+    "JUnit.WorkhubApplicationTests.executor": "Run",
+    "Maven.workhub [clean].executor": "Run",
+    "Maven.workhub [install].executor": "Run",
+    "Maven.workhub [validate].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.WorkhubApplication.executor": "Run",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "deletionFromPopupRequiresConfirmation": "false",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/hong/Developer/GlobalTeamProject Test",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="api | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/workhub/src/test/api.http" executionIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="api-test | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/workhub/api-test.http" executionIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="HTTP Request.api | #1" />
+        <item itemvalue="HTTP Request.api-test | #1" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="247a759c-3093-418b-841e-2817af3456f7" name="Changes" comment="" />
+      <created>1770570198846</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1770570198846</updated>
+      <workItem from="1770570198846" duration="1409000" />
+      <workItem from="1770572310401" duration="226000" />
+      <workItem from="1770572547479" duration="1271000" />
+      <workItem from="1770575088068" duration="757000" />
+      <workItem from="1770575852584" duration="7442000" />
+      <workItem from="1770614479146" duration="498000" />
+      <workItem from="1770614991167" duration="1330000" />
+      <workItem from="1770628964046" duration="6322000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/GlobalTeamProject$WorkhubApplication.ic" NAME="WorkhubApplication Coverage Results" MODIFIED="1770575951663" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>com.teamproject.workhub.*</FILTER>
+    </SUITE>
+  </component>
+</project>
