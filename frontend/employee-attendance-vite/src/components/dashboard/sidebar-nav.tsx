@@ -80,7 +80,7 @@ export function SidebarNav() {
                   className={cn(
                     "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-sidebar-accent text-primary"
+                      ? "bg-sidebar-accent text-foreground font-semibold"
                       : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-foreground"
                   )}
                 >
@@ -112,7 +112,7 @@ export function SidebarNav() {
                       className={cn(
                         "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                         isActive
-                          ? "bg-sidebar-accent text-primary"
+                          ? "bg-sidebar-accent text-foreground font-semibold"
                           : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-foreground"
                       )}
                     >

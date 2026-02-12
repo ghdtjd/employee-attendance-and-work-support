@@ -48,6 +48,7 @@ import {
     type Department
 } from "@/lib/api"
 import { toast } from "sonner"
+import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 
 export default function EmployeeManagement() {
