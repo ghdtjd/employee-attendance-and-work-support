@@ -1,6 +1,5 @@
 package com.teamproject.workhub.dto.boardDto;
 
-
 import com.teamproject.workhub.entity.boardEntity.Board;
 import com.teamproject.workhub.entity.boardEntity.Importance;
 import lombok.Getter;
@@ -23,7 +22,6 @@ public class BoardResponseDTO {
     private Importance importance;
     private LocalDateTime createdAt;
 
-
     public BoardResponseDTO(Board board) {
         this.noticeId = board.getId();
         this.title = board.getTitle();
@@ -31,14 +29,11 @@ public class BoardResponseDTO {
         this.importance = board.getImportance();
         this.createdAt = board.getCreatedAt();
 
-
-        if(board.getEmployeeId() != null){
-            this.employeeId = board.getEmployeeId().getId();
+        if (board.getEmployeeId() != null) {
+            this.employeeId = board.getEmployeeId().getEmployeeId();
             this.position = board.getEmployeeId().getPosition();
         }
 
-     }
-
-
+    }
 
 }

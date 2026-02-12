@@ -1,6 +1,6 @@
 package com.teamproject.workhub.service.userService;
 
-
+import com.teamproject.workhub.dto.employeeDto.AdminEmployeeUpdateRequest;
 import com.teamproject.workhub.dto.employeeDto.EmployeeRequest;
 import com.teamproject.workhub.dto.userDto.LoginRequest;
 import com.teamproject.workhub.dto.userDto.RegisterRequest;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +46,8 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-
-        Department dept = departmentRepository.findById(request.getDepartNo()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부서 코드입니다."));
+        Department dept = departmentRepository.findById(request.getDepartNo())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부서 코드입니다."));
 
         Employee employee = Employee.builder()
                 .user(savedUser)
@@ -79,7 +78,6 @@ public class UserService {
         return user;
     }
 
-
     // 전체 사원 목록
 
     public List<Employee> getAllEmployee() {
@@ -87,11 +85,9 @@ public class UserService {
 
     }
 
-
     // 비밀번호 초기화
     public String resetPassword(Long id) {
         Optional<User> user = userRepository.findById(id);
-
 
         if (user.isPresent()) {
             User userPassword = user.get();
@@ -104,7 +100,7 @@ public class UserService {
 
     }
 
-    //비밀번호 변경 (본인만 가능)
+    // 비밀번호 변경 (본인만 가능)
     @jakarta.transaction.Transactional
     public void changePassword(User loginUser, String currentPassword, String newPassword) {
 
@@ -123,5 +119,38 @@ public class UserService {
         user.changePassword(encodedNewPassword);
 
         loginUser.setMustChangePassword(false);
+    }
+
+    // 내 정보 수정 (이메일, 전화번호)
+    @jakarta.transaction.Transactional
+    public void updateUserInfo(User loginUser, EmployeeRequest request) {
+        Employee employee = employeeRepository.findByUser(loginUser)
+                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
+
+        employee.updateMyInfo(request.getEmail(), request.getPhone());
+    }
+
+    public User findByEmployeeNo(String employeeNo) {
+        return userRepository.findByEmployeeNo(employeeNo)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    }
+
+    // 관리자용: 사원 정보 수정
+    @jakarta.transaction.Transactional
+    public void updateEmployeeByAdmin(Long employeeId, AdminEmployeeUpdateRequest request) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
+
+        Department dept = departmentRepository.findById(request.getDepartNo())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부서 코드입니다."));
+
+        employee.setName(request.getName());
+        employee.setEmail(request.getEmail());
+        employee.setPhone(request.getPhone());
+        employee.setPosition(request.getPosition());
+        employee.setJoinDate(request.getJoinDate());
+        employee.setDepartment(dept);
+
+        employeeRepository.save(employee);
     }
 }

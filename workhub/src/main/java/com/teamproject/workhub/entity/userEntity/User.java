@@ -24,6 +24,7 @@ public class User {
     private String employeeNo;
 
     @Column(nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -33,6 +34,7 @@ public class User {
     private boolean isActive;
 
     @Column(name = "must_change_password")
+    @Builder.Default
     private boolean mustChangePassword = true;
 
     @Column(name = "last_login")

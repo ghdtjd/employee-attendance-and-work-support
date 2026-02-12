@@ -1,4 +1,5 @@
 package com.teamproject.workhub.service.taskService;
+
 import java.time.LocalDate;
 import com.teamproject.workhub.dto.taskDto.TaskResponseDto;
 import com.teamproject.workhub.dto.taskDto.TaskUpdateRequest;
@@ -30,6 +31,7 @@ public class TaskService {
 
         return taskRepository.save(task);
     }
+
     public Task updateTaskStatus(Long taskId, TaskStatus newStatus) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("タスクが見つかりません: " + taskId));
@@ -41,6 +43,11 @@ public class TaskService {
 
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
+    }
+
+    // 사원별 업무 조회
+    public List<Task> getTasksByEmployeeId(Long employeeId) {
+        return taskRepository.findByEmployeeId(employeeId);
     }
 
     // 업무 상세 조회
@@ -55,11 +62,11 @@ public class TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("タスクが見つかりません: " + taskId));
 
-
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
         task.setStatus(request.getStatus());
         task.setPriority(request.getPriority());
+        task.setDueDate(request.getDueDate());
 
         return task; // @Transactional에 의해 자동 저장됨
     }
@@ -98,5 +105,19 @@ public class TaskService {
         return TaskResponseDto.from(updatedTask);
     }
 
-}
+    @Transactional
+    public Task approveTask(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("タスクが見つかりません: " + taskId));
+        task.setStatus(TaskStatus.APPROVED);
+        return taskRepository.save(task);
+    }
 
+    @Transactional
+    public Task rejectTask(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("タスクが見つかりません: " + taskId));
+        task.setStatus(TaskStatus.REJECTED);
+        return taskRepository.save(task);
+    }
+}

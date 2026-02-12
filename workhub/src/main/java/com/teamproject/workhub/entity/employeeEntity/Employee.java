@@ -1,14 +1,11 @@
 package com.teamproject.workhub.entity.employeeEntity;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.teamproject.workhub.entity.DepartmentEntity.Department;
 import com.teamproject.workhub.entity.userEntity.Role;
 import com.teamproject.workhub.entity.userEntity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -25,22 +23,24 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employeeId")
-    private Long id;
+    private Long employeeId;
 
-
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", nullable = false)
     private User user;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.USER;
 
-    @ManyToOne
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "manager_id" })
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departNo")
-    private  Department department;
+    private Department department;
 
-    @Column(name = "employeeNo" , nullable = false, unique = true)
+    @Column(name = "employeeNo", nullable = false, unique = true)
     private String employeeNo;
 
     @Column(nullable = false)
@@ -49,7 +49,6 @@ public class Employee {
     private String email;
 
     private String phone;
-
 
     @Column(name = "position")
     private String position;
@@ -64,6 +63,13 @@ public class Employee {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Builder.Default
+    @Column(name = "total_leave")
+    private Double totalLeave = 15.0;
+
+    @Builder.Default
+    @Column(name = "used_leave")
+    private Double usedLeave = 0.0;
 
     public void updateMyInfo(String email, String phone) {
         if (email != null && !email.isBlank()) {
@@ -72,5 +78,5 @@ public class Employee {
         if (phone != null && !phone.isBlank()) {
             this.phone = phone;
         }
-        }
+    }
 }

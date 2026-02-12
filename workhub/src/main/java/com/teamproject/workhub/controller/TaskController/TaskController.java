@@ -11,7 +11,6 @@ import com.teamproject.workhub.repository.EmployeeRepository.EmployeeRepository;
 import com.teamproject.workhub.service.taskService.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,26 +38,64 @@ public class TaskController {
         return "TaskController OK";
     }
 
-
-    // TODO: GET    /tasks            작업 목록 조회
+    // TODO: GET /tasks 작업 목록 조회
     @GetMapping
-    public List<TaskResponseDto> getAllTasks() {
-        List<Task> tasks = taskService.getAllTasks();
+    public List<TaskResponseDto> getAllTasks(
+            @RequestParam(name = "scope", required = false) String scope,
+            HttpServletRequest httpRequest) {
+        // 1. 세션에서 로그인한 사용자 정보 가져오기
+        HttpSession session = httpRequest.getSession(false);
+        if (session == null || session.getAttribute("loginUser") == null) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+
+        User loginUser = (User) session.getAttribute("loginUser");
+        List<Task> tasks;
+
+        // 2. 권한 및 스코프에 따라 다른 목록 반환
+        if (loginUser.getRole() == Role.ADMIN && "all".equals(scope)) {
+            // 관리자: 명시적으로 전체 조회를 요청한 경우에만 모든 업무 반환
+            tasks = taskService.getAllTasks();
+        } else {
+            // 본인의 개인 업무만 조회
+            Employee loginEmployee = employeeRepository.findByUser(loginUser).orElse(null);
+
+            if (loginEmployee != null) {
+                // 사원 정보가 있으면 해당 사원ID로 필터링
+                tasks = taskService.getTasksByEmployeeId(loginEmployee.getEmployeeId());
+            } else {
+                // 사원 정보가 없는 경우 (예: 특수 관리자 계정 등) - 본인이 직접 연관된 업무만 (UserId 기반)
+                // 만약 완전한 격리를 원한다면 Collections.emptyList()를 반환해도 됨
+                tasks = taskService.getAllTasks().stream()
+                        .filter(t -> loginUser.getId().equals(t.getUserId()))
+                        .filter(t -> t.getEmployeeId() == null) // 담당자가 없는 경우만 본인거로 간주
+                        .collect(Collectors.toList());
+            }
+        }
+
         return tasks.stream()
                 .map(TaskResponseDto::from)
                 .collect(Collectors.toList());
     }
-    // TODO: GET    /tasks/{taskId}   작업 상세 조회
+
+    // TODO: GET /tasks/{taskId} 작업 상세 조회
     @GetMapping("/{taskId}")
     public TaskResponseDto getTaskById(@PathVariable Long taskId) {
         Task task = taskService.getTaskById(taskId);
         return TaskResponseDto.from(task);
     }
-    // TODO: POST   /tasks            작업 등록
+
+    // TODO: POST /tasks 작업 등록
     @PostMapping
     public Task createTask(
             @RequestBody TaskCreateRequest request,
-            HttpServletRequest httpRequest) {  // ← HttpServletRequest 추가!
+            HttpServletRequest httpRequest) { // ← HttpServletRequest 추가!
+
+        // DEBUG
+        System.out.println("=== CREATE TASK DEBUG ===");
+        System.out.println("Title: " + request.getTitle());
+        System.out.println("DueDate: " + request.getDueDate());
+        System.out.println("EmployeeId: " + request.getEmployeeId());
 
         // 1. 세션에서 로그인한 사용자 정보 가져오기
         HttpSession session = httpRequest.getSession(false);
@@ -76,7 +113,7 @@ public class TaskController {
             Employee loginEmployee = employeeRepository.findByUser(loginUser)
                     .orElseThrow(() -> new IllegalArgumentException("사원 정보를 찾을 수 없습니다."));
 
-            if (!request.getEmployeeId().equals(loginEmployee.getId())) {
+            if (!request.getEmployeeId().equals(loginEmployee.getEmployeeId())) {
                 throw new IllegalArgumentException("본인에게만 업무를 할당할 수 있습니다.");
             }
         }
@@ -87,23 +124,33 @@ public class TaskController {
                 request.getDescription(),
                 request.getDueDate(),
                 request.getEmployeeId(),
-                request.getUserId()
-        );
+                request.getUserId());
     }
-    // TODO: PUT    /tasks/{taskId}   작업 수정
+
+    // TODO: PUT /tasks/{taskId} 작업 수정
     @PutMapping("/{taskId}")
     public TaskResponseDto updateTask(
             @PathVariable Long taskId,
             @RequestBody TaskUpdateRequest request) {
+        System.out.println("=== UPDATE TASK DEBUG ===");
+        System.out.println("TaskId: " + taskId);
+        System.out.println("Title: " + request.getTitle());
+        System.out.println("DueDate: " + request.getDueDate());
+        System.out.println("Status: " + request.getStatus());
         Task updatedTask = taskService.updateTask(taskId, request);
         return TaskResponseDto.from(updatedTask);
     }
-    // TODO: DELETE /tasks/{taskId}   작업 삭제
+
+    // TODO: DELETE /tasks/{taskId} 작업 삭제
     @DeleteMapping("/{taskId}")
     public ResponseEntity<String> deleteTask(@PathVariable Long taskId) {
+        System.out.println("=== DELETE TASK DEBUG ===");
+        System.out.println("TaskId: " + taskId);
         taskService.deleteTask(taskId);
+        System.out.println("Task deleted successfully");
         return ResponseEntity.ok("タスクが削除されました");
     }
+
     @PatchMapping("/{taskId}/status")
     public ResponseEntity<TaskResponseDto> updateTaskStatus(
             @PathVariable Long taskId,

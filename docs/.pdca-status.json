@@ -1,9 +1,95 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-02-10T01:15:07.828Z",
-  "activeFeatures": [],
-  "primaryFeature": null,
-  "features": {},
+  "lastUpdated": "2026-02-11T09:09:26.455Z",
+  "activeFeatures": [
+    "taskDto",
+    "taskService",
+    "schedule",
+    "employee-attendance-vite",
+    "config",
+    "TaskController"
+  ],
+  "primaryFeature": "taskDto",
+  "features": {
+    "taskDto": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-02-11T08:53:53.955Z",
+        "lastUpdated": "2026-02-11T08:53:53.955Z"
+      },
+      "lastFile": "/Users/hong/Developer/employee-attendance-and-work-support/workhub/src/main/java/com/teamproject/workhub/dto/taskDto/TaskUpdateRequest.java"
+    },
+    "taskService": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-02-11T08:54:10.608Z",
+        "lastUpdated": "2026-02-11T08:54:10.608Z"
+      },
+      "lastFile": "/Users/hong/Developer/employee-attendance-and-work-support/workhub/src/main/java/com/teamproject/workhub/service/taskService/TaskService.java"
+    },
+    "schedule": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-02-11T08:54:36.328Z",
+        "lastUpdated": "2026-02-11T09:08:53.430Z"
+      },
+      "lastFile": "/Users/hong/Developer/employee-attendance-and-work-support/frontend/employee-attendance-vite/src/components/schedule/schedule-dialog.tsx"
+    },
+    "employee-attendance-vite": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-02-11T08:55:20.706Z",
+        "lastUpdated": "2026-02-11T08:55:20.707Z"
+      },
+      "lastFile": "/Users/hong/Developer/employee-attendance-and-work-support/frontend/employee-attendance-vite/src/lib/api.ts"
+    },
+    "config": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-02-11T08:57:38.068Z",
+        "lastUpdated": "2026-02-11T08:57:38.068Z"
+      },
+      "lastFile": "/Users/hong/Developer/employee-attendance-and-work-support/workhub/src/main/java/com/teamproject/workhub/config/JacksonConfig.java"
+    },
+    "TaskController": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-02-11T09:09:12.241Z",
+        "lastUpdated": "2026-02-11T09:09:26.455Z"
+      },
+      "lastFile": "/Users/hong/Developer/employee-attendance-and-work-support/workhub/src/main/java/com/teamproject/workhub/controller/TaskController/TaskController.java"
+    }
+  },
   "pipeline": {
     "currentPhase": 1,
     "level": "Dynamic",
@@ -12,7 +98,62 @@
   "session": {
     "startedAt": "2026-02-10T01:15:07.828Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-02-10T01:15:07.828Z"
+    "lastActivity": "2026-02-11T09:09:26.455Z"
   },
-  "history": []
+  "history": [
+    {
+      "timestamp": "2026-02-11T08:53:53.955Z",
+      "feature": "taskDto",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-11T08:54:10.608Z",
+      "feature": "taskService",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-11T08:54:36.328Z",
+      "feature": "schedule",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-11T08:55:20.707Z",
+      "feature": "employee-attendance-vite",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-11T08:57:38.068Z",
+      "feature": "config",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-11T09:08:53.430Z",
+      "feature": "schedule",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-11T09:09:12.241Z",
+      "feature": "TaskController",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-11T09:09:18.387Z",
+      "feature": "TaskController",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-11T09:09:26.455Z",
+      "feature": "TaskController",
+      "phase": "do",
+      "action": "updated"
+    }
+  ]
 }

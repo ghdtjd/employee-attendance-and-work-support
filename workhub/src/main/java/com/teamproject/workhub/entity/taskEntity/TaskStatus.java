@@ -1,8 +1,11 @@
 package com.teamproject.workhub.entity.taskEntity;
 
-public enum TaskStatus {TODO("未着手"),
+public enum TaskStatus {
+    TODO("未着手"),
     IN_PROGRESS("進行中"),
-    DONE("完了");
+    DONE("完了"),
+    APPROVED("承認済み"),
+    REJECTED("却下");
 
     private final String description;
 

@@ -4,6 +4,8 @@ import com.teamproject.workhub.entity.taskEntity.TaskStatus;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 public class TaskUpdateRequest {
@@ -11,4 +13,5 @@ public class TaskUpdateRequest {
     private String description;
     private TaskStatus status;
     private Integer priority;
+    private LocalDate dueDate;
 }

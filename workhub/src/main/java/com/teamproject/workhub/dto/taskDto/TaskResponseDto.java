@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -22,6 +23,7 @@ public class TaskResponseDto {
     private String description;
     private TaskStatus status;
     private Integer priority;
+    private LocalDate dueDate;
     private LocalDateTime createdAt;
 
     // Entity → DTO 변환 메서드
@@ -35,8 +37,8 @@ public class TaskResponseDto {
                 .description(task.getDescription())
                 .status(task.getStatus())
                 .priority(task.getPriority())
+                .dueDate(task.getDueDate())
                 .createdAt(task.getCreatedAt())
                 .build();
     }
 }
-

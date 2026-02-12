@@ -21,154 +21,166 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class AttendanceService {
 
-    private final AttendanceRepository attendanceRepository;
-    private final EmployeeRepository employeeRepository;
+        private final AttendanceRepository attendanceRepository;
+        private final EmployeeRepository employeeRepository;
 
-    // 내 전체 근태 이력 조회
-    public List<AttendanceResponseDto> getMyAttendance(User loginUser) {
-        Employee employee = employeeRepository.findByUserId(loginUser.getId())
-                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
+        // 내 전체 근태 이력 조회
+        public List<AttendanceResponseDto> getMyAttendance(User loginUser) {
+                Employee employee = employeeRepository.findByUserId(loginUser.getId())
+                                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
-        List<Attendance> attendances = attendanceRepository.findByEmployeeOrderByWorkDateDesc(employee);
+                List<Attendance> attendances = attendanceRepository.findByEmployeeOrderByWorkDateDesc(employee);
 
-        return attendances.stream()
-                .map(attendance -> AttendanceResponseDto.from(attendance))
-                .collect(Collectors.toList());
-    }
-
-    // 특정 기간 근태 조회
-    public List<AttendanceResponseDto> getMyAttendanceByPeriod(
-            User loginUser, LocalDate startDate, LocalDate endDate) {
-
-        Employee employee = employeeRepository.findByUserId(loginUser.getId())
-                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
-
-        List<Attendance> attendances = attendanceRepository
-                .findByEmployeeAndWorkDateBetweenOrderByWorkDateDesc(employee, startDate, endDate);
-
-        return attendances.stream()
-                .map(attendance -> AttendanceResponseDto.from(attendance))
-                .collect(Collectors.toList());
-    }
-
-    // 특정 월 근태 조회
-    public List<AttendanceResponseDto> getMyAttendanceByMonth(User loginUser, int year, int month) {
-        Employee employee = employeeRepository.findByUserId(loginUser.getId())
-                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
-
-        // 해당 월의 첫날과 마지막날
-        YearMonth yearMonth = YearMonth.of(year, month);
-        LocalDate startOfMonth = yearMonth.atDay(1);
-        LocalDate endOfMonth = yearMonth.atEndOfMonth();
-
-        List<Attendance> attendances = attendanceRepository
-                .findByEmployeeAndWorkDateBetween(employee, startOfMonth, endOfMonth);
-
-        return attendances.stream()
-                .map(attendance -> AttendanceResponseDto.from(attendance))
-                .collect(Collectors.toList());
-    }
-
-    // 특정 상태 근태 조회
-    public List<AttendanceResponseDto> getMyAttendanceByStatus(
-            User loginUser, AttendanceStatus status) {
-
-        Employee employee = employeeRepository.findByUserId(loginUser.getId())
-                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
-
-        List<Attendance> attendances = attendanceRepository
-                .findByEmployeeAndStatusOrderByWorkDateDesc(employee, status);
-
-        return attendances.stream()
-                .map(attendance -> AttendanceResponseDto.from(attendance))
-                .collect(Collectors.toList());
-    }
-
-    // 출근 기록
-    @Transactional
-    public AttendanceResponseDto checkIn(User loginUser, String notes) {
-        Employee employee = employeeRepository.findByUserId(loginUser.getId())
-                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
-
-        LocalDate today = LocalDate.now();
-        LocalTime now = LocalTime.now();
-
-        // 오늘 이미 출근 기록이 있는지 확인
-        List<Attendance> existingAttendances = attendanceRepository
-                .findByEmployeeAndWorkDate(employee, today);
-
-        if (!existingAttendances.isEmpty()) {
-            throw new IllegalArgumentException("오늘은 이미 출근 기록이 있습니다.");
+                return attendances.stream()
+                                .map(attendance -> AttendanceResponseDto.from(attendance))
+                                .collect(Collectors.toList());
         }
 
-        // 새 근태 기록 생성
-        Attendance attendance = Attendance.builder()
-                .employee(employee)
-                .workDate(today)
-                .checkInTime(now)
-                .status(AttendanceStatus.NORMAL)
-                .notes(notes)
-                .build();
+        // 특정 기간 근태 조회
+        public List<AttendanceResponseDto> getMyAttendanceByPeriod(
+                        User loginUser, LocalDate startDate, LocalDate endDate) {
 
-        Attendance saved = attendanceRepository.save(attendance);
+                Employee employee = employeeRepository.findByUserId(loginUser.getId())
+                                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
-        return AttendanceResponseDto.from(saved);
-    }
+                List<Attendance> attendances = attendanceRepository
+                                .findByEmployeeAndWorkDateBetweenOrderByWorkDateDesc(employee, startDate, endDate);
 
-    // 퇴근 기록
-    @Transactional
-    public AttendanceResponseDto checkOut(User loginUser) {
-        Employee employee = employeeRepository.findByUserId(loginUser.getId())
-                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
-
-        LocalDate today = LocalDate.now();
-        LocalTime now = LocalTime.now();
-
-        // 오늘 출근 기록 찾기
-        List<Attendance> todayAttendances = attendanceRepository
-                .findByEmployeeAndWorkDate(employee, today);
-
-        if (todayAttendances.isEmpty()) {
-            throw new IllegalArgumentException("오늘 출근 기록이 없습니다. 먼저 출근해주세요.");
+                return attendances.stream()
+                                .map(attendance -> AttendanceResponseDto.from(attendance))
+                                .collect(Collectors.toList());
         }
 
-        Attendance attendance = todayAttendances.get(0);
+        // 특정 월 근태 조회
+        public List<AttendanceResponseDto> getMyAttendanceByMonth(User loginUser, int year, int month) {
+                Employee employee = employeeRepository.findByUserId(loginUser.getId())
+                                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
-        // 이미 퇴근했는지 확인
-        if (attendance.getCheckOutTime() != null) {
-            throw new IllegalArgumentException("이미 퇴근 처리되었습니다.");
+                // 해당 월의 첫날과 마지막날
+                YearMonth yearMonth = YearMonth.of(year, month);
+                LocalDate startOfMonth = yearMonth.atDay(1);
+                LocalDate endOfMonth = yearMonth.atEndOfMonth();
+
+                List<Attendance> attendances = attendanceRepository
+                                .findByEmployeeAndWorkDateBetween(employee, startOfMonth, endOfMonth);
+
+                return attendances.stream()
+                                .map(attendance -> AttendanceResponseDto.from(attendance))
+                                .collect(Collectors.toList());
         }
 
-        // 퇴근 기록 및 근태 상태 자동 계산
-        attendance.checkOut(now);
+        // 특정 상태 근태 조회
+        public List<AttendanceResponseDto> getMyAttendanceByStatus(
+                        User loginUser, AttendanceStatus status) {
 
-        return AttendanceResponseDto.from(attendance);
-    }
+                Employee employee = employeeRepository.findByUserId(loginUser.getId())
+                                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
-    // 오늘 근태 조회
-    public AttendanceResponseDto getTodayAttendance(User loginUser) {
-        Employee employee = employeeRepository.findByUserId(loginUser.getId())
-                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
+                List<Attendance> attendances = attendanceRepository
+                                .findByEmployeeAndStatusOrderByWorkDateDesc(employee, status);
 
-        LocalDate today = LocalDate.now();
-
-        List<Attendance> todayAttendances = attendanceRepository
-                .findByEmployeeAndWorkDate(employee, today);
-
-        if (todayAttendances.isEmpty()) {
-            return null;  // 오늘 기록 없음
+                return attendances.stream()
+                                .map(attendance -> AttendanceResponseDto.from(attendance))
+                                .collect(Collectors.toList());
         }
 
-        return AttendanceResponseDto.from(todayAttendances.get(0));
-    }
+        // 출근 기록
+        @Transactional
+        public AttendanceResponseDto checkIn(User loginUser, String notes) {
+                Employee employee = employeeRepository.findByUserId(loginUser.getId())
+                                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
 
-    // 관리자용: 전체 사원 근태 이력 조회
-    @Transactional(readOnly = true)
-    public List<AttendanceResponseDto> getAllAttendance() {
-        List<Attendance> attendances = attendanceRepository.findAll();
+                LocalDate today = LocalDate.now();
+                LocalTime now = LocalTime.now();
 
-        return attendances.stream()
-                .map(AttendanceResponseDto::from)
-                .collect(Collectors.toList());
-    }
+                // 오늘 이미 출근 기록이 있는지 확인
+                List<Attendance> existingAttendances = attendanceRepository
+                                .findByEmployeeAndWorkDate(employee, today);
+
+                if (!existingAttendances.isEmpty()) {
+                        throw new IllegalArgumentException("오늘은 이미 출근 기록이 있습니다.");
+                }
+
+                // 새 근태 기록 생성
+                Attendance attendance = Attendance.builder()
+                                .employee(employee)
+                                .workDate(today)
+                                .checkInTime(now)
+                                .status(AttendanceStatus.NORMAL)
+                                .notes(notes)
+                                .build();
+
+                Attendance saved = attendanceRepository.save(attendance);
+
+                return AttendanceResponseDto.from(saved);
+        }
+
+        // 퇴근 기록
+        @Transactional
+        public AttendanceResponseDto checkOut(User loginUser) {
+                Employee employee = employeeRepository.findByUserId(loginUser.getId())
+                                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
+
+                LocalDate today = LocalDate.now();
+                LocalTime now = LocalTime.now();
+
+                // 오늘 출근 기록 찾기
+                List<Attendance> todayAttendances = attendanceRepository
+                                .findByEmployeeAndWorkDate(employee, today);
+
+                if (todayAttendances.isEmpty()) {
+                        throw new IllegalArgumentException("오늘 출근 기록이 없습니다. 먼저 출근해주세요.");
+                }
+
+                Attendance attendance = todayAttendances.get(0);
+
+                // 이미 퇴근했는지 확인
+                if (attendance.getCheckOutTime() != null) {
+                        throw new IllegalArgumentException("이미 퇴근 처리되었습니다.");
+                }
+
+                // 퇴근 기록 및 근태 상태 자동 계산
+                attendance.checkOut(now);
+
+                return AttendanceResponseDto.from(attendance);
+        }
+
+        // 오늘 근태 조회
+        public AttendanceResponseDto getTodayAttendance(User loginUser) {
+                Employee employee = employeeRepository.findByUserId(loginUser.getId())
+                                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
+
+                LocalDate today = LocalDate.now();
+
+                List<Attendance> todayAttendances = attendanceRepository
+                                .findByEmployeeAndWorkDate(employee, today);
+
+                if (todayAttendances.isEmpty()) {
+                        return null; // 오늘 기록 없음
+                }
+
+                return AttendanceResponseDto.from(todayAttendances.get(0));
+        }
+
+        // 관리자용: 전체 사원 근태 이력 조회
+        @Transactional(readOnly = true)
+        public List<AttendanceResponseDto> getAllAttendance() {
+                List<Attendance> attendances = attendanceRepository.findAll();
+
+                return attendances.stream()
+                                .map(AttendanceResponseDto::from)
+                                .collect(Collectors.toList());
+        }
+
+        // 관리자용: 특정 사원 근태 이력 조회
+        public List<AttendanceResponseDto> getAttendanceByEmployeeId(Long employeeId) {
+                Employee employee = employeeRepository.findById(employeeId)
+                                .orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
+
+                List<Attendance> attendances = attendanceRepository.findByEmployeeOrderByWorkDateDesc(employee);
+
+                return attendances.stream()
+                                .map(AttendanceResponseDto::from)
+                                .collect(Collectors.toList());
+        }
 }

@@ -1,6 +1,7 @@
 package com.teamproject.workhub.entity.DepartmentEntity;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.teamproject.workhub.entity.employeeEntity.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name= "department")
+@Table(name = "department")
 public class Department {
 
     @Id
@@ -33,11 +34,10 @@ public class Department {
     @Column(nullable = false)
     private String departLocation;
 
+    @JsonIgnore
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Employee manager_id;
-
-
-
 
 }
