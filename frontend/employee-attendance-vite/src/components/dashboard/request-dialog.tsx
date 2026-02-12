@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select"
 import { useState } from "react"
 import { toast } from "sonner"
-import { createTask, createObjection } from "@/lib/api"
+import { createTask, createObjection, createRequest } from "@/lib/api"
 import { format } from "date-fns"
 
 interface RequestDialogProps {
@@ -32,12 +32,12 @@ interface RequestDialogProps {
 }
 
 export function RequestDialog({ type, open, onOpenChange, onSuccess, user }: RequestDialogProps) {
-    const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'))
+    const [startDate, setStartDate] = useState(format(new Date(), 'yyyy-MM-dd'))
+    const [endDate, setEndDate] = useState(format(new Date(), 'yyyy-MM-dd'))
     const [reason, setReason] = useState("")
     const [category, setCategory] = useState("출근누락")
     const [loading, setLoading] = useState(false)
 
-    const titlePrefix = type === 'LEAVE' ? '[휴가]' : type === 'REMOTE' ? '[재택]' : ''
     const titleLabel = type === 'LEAVE' ? '휴가 신청' : type === 'REMOTE' ? '재택근무 신청' : '근태 이의신청'
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -46,20 +46,34 @@ export function RequestDialog({ type, open, onOpenChange, onSuccess, user }: Req
             toast.error("로그인 정보가 없습니다.")
             return
         }
+
+        // Basic validation for range
+        if ((type === 'LEAVE' || type === 'REMOTE') && startDate > endDate) {
+            toast.error("시작일은 종료일보다 빨라야 합니다.")
+            return
+        }
+
         setLoading(true)
 
         try {
             if (type === 'OBJECTION') {
                 await createObjection({
-                    attendanceDate: date,
+                    attendanceDate: startDate,
                     category,
+                    reason,
+                })
+            } else if (type === 'LEAVE' || type === 'REMOTE') {
+                await createRequest({
+                    type: type,
+                    startDate: startDate,
+                    endDate: endDate,
                     reason,
                 })
             } else {
                 await createTask({
-                    title: `${titlePrefix} ${titleLabel}`,
-                    description: `날짜: ${date}\n사유: ${reason}`,
-                    dueDate: date + "T18:00:00",
+                    title: `신청: ${titleLabel}`,
+                    description: `기간: ${startDate} ~ ${endDate}\n사유: ${reason}`,
+                    dueDate: startDate + "T18:00:00",
                     employeeId: user.employeeId,
                     userId: user.id
                 })
@@ -88,16 +102,41 @@ export function RequestDialog({ type, open, onOpenChange, onSuccess, user }: Req
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-                    <div className="grid gap-2">
-                        <Label htmlFor="date">날짜</Label>
-                        <Input
-                            id="date"
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            required
-                            className="block w-full text-foreground bg-background dark:[color-scheme:dark]"
-                        />
+                    <div className="grid grid-cols-2 gap-2">
+                        <div className="grid gap-2">
+                            <Label htmlFor="startDate">
+                                {type === 'OBJECTION' ? '대상 날짜' : '시작일'}
+                            </Label>
+                            <Input
+                                id="startDate"
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => {
+                                    setStartDate(e.target.value)
+                                    // Automatically set end date if it's currently earlier or same as old start date
+                                    if (endDate < e.target.value) {
+                                        setEndDate(e.target.value)
+                                    }
+                                }}
+                                required
+                                className="block w-full text-foreground bg-background dark:[color-scheme:dark]"
+                            />
+                        </div>
+
+                        {(type === 'LEAVE' || type === 'REMOTE') && (
+                            <div className="grid gap-2">
+                                <Label htmlFor="endDate">종료일</Label>
+                                <Input
+                                    id="endDate"
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    required
+                                    min={startDate}
+                                    className="block w-full text-foreground bg-background dark:[color-scheme:dark]"
+                                />
+                            </div>
+                        )}
                     </div>
 
                     {type === 'OBJECTION' && (

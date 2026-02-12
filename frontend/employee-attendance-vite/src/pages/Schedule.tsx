@@ -1,12 +1,12 @@
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { useEffect, useState, useRef, useCallback } from "react"
-import { fetchTasks, checkLogin, type Task, type User } from "@/lib/api"
+import { fetchTasks, fetchRequests, checkLogin, type Task, type User, type AttendanceRequest } from "@/lib/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Calendar } from "@/components/ui/calendar"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { format, isSameDay, parseISO } from "date-fns"
+import { format, isSameDay, parseISO, isWithinInterval, startOfDay } from "date-fns"
 import { ko } from "date-fns/locale"
 import { ScheduleDialog } from "@/components/schedule/schedule-dialog"
 import { toast } from "sonner"
@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function SchedulePage() {
     const [tasks, setTasks] = useState<Task[]>([])
+    const [requests, setRequests] = useState<AttendanceRequest[]>([])
     const [loading, setLoading] = useState(true)
     const [date, setDate] = useState<Date | undefined>(new Date())
     const [user, setUser] = useState<User | null>(null)
@@ -44,8 +45,12 @@ export default function SchedulePage() {
             const userData = await checkLogin()
             setUser(userData)
 
-            const taskData = await fetchTasks()
+            const [taskData, requestData] = await Promise.all([
+                fetchTasks(),
+                fetchRequests()
+            ])
             setTasks(taskData)
+            setRequests(requestData)
         } catch (error) {
             console.error("Failed to load data", error)
             toast.error("일정을 불러오는데 실패했습니다.")
@@ -60,7 +65,7 @@ export default function SchedulePage() {
 
     // Filter tasks for selected date
     const filteredTasks = tasks.filter(task => {
-        // Exclude Requests (Leave/Remote)
+        // Exclude legacy Requests in tasks (if any still exist)
         if (task.title.startsWith("[휴가]") || task.title.startsWith("[재택]")) return false
 
         if (!date) return true
@@ -68,6 +73,14 @@ export default function SchedulePage() {
             return isSameDay(parseISO(task.dueDate), date)
         }
         return isSameDay(parseISO(task.createdAt), date)
+    })
+
+    const filteredRequests = requests.filter(wr => {
+        if (!date) return true
+        const start = startOfDay(parseISO(wr.startDate))
+        const end = startOfDay(parseISO(wr.endDate))
+        const target = startOfDay(date)
+        return isWithinInterval(target, { start, end })
     })
 
     // Filter tasks for selected MONTH
@@ -78,6 +91,14 @@ export default function SchedulePage() {
         if (!date) return true
         const taskDate = task.dueDate ? parseISO(task.dueDate) : parseISO(task.createdAt)
         return taskDate.getMonth() === date.getMonth() && taskDate.getFullYear() === date.getFullYear()
+    })
+
+    const filteredMonthlyRequests = requests.filter(wr => {
+        if (!date) return true
+        const startDate = parseISO(wr.startDate)
+        const endDate = parseISO(wr.endDate)
+        return (startDate.getMonth() === date.getMonth() && startDate.getFullYear() === date.getFullYear()) ||
+            (endDate.getMonth() === date.getMonth() && endDate.getFullYear() === date.getFullYear())
     })
 
     const handleAddTask = () => {
@@ -137,6 +158,20 @@ export default function SchedulePage() {
                                                     mode="single"
                                                     selected={date}
                                                     onSelect={handleDateSelect}
+                                                    hasEvent={(d) => {
+                                                        const hasTask = tasks.some(t => {
+                                                            if (t.title.startsWith("[휴가]") || t.title.startsWith("[재택]")) return false
+                                                            const taskDate = t.dueDate ? parseISO(t.dueDate) : parseISO(t.createdAt)
+                                                            return isSameDay(taskDate, d)
+                                                        })
+                                                        const hasRequest = requests.some(wr => {
+                                                            const start = startOfDay(parseISO(wr.startDate))
+                                                            const end = startOfDay(parseISO(wr.endDate))
+                                                            const target = startOfDay(d)
+                                                            return isWithinInterval(target, { start, end })
+                                                        })
+                                                        return hasTask || hasRequest
+                                                    }}
                                                     className="rounded-md border shadow"
                                                 />
                                             </CardContent>
@@ -152,10 +187,28 @@ export default function SchedulePage() {
                                         <CardContent>
                                             {loading ? (
                                                 <div className="text-center py-10 text-muted-foreground">로딩 중...</div>
-                                            ) : filteredTasks.length === 0 ? (
+                                            ) : (filteredTasks.length === 0 && filteredRequests.length === 0) ? (
                                                 <div className="text-center py-10 text-muted-foreground">등록된 일정이 없습니다.</div>
                                             ) : (
                                                 <div className="space-y-3">
+                                                    {filteredRequests.map((wr) => (
+                                                        <div
+                                                            key={`wr-${wr.id}`}
+                                                            className="flex items-center justify-between rounded-lg border border-primary/20 bg-primary/5 p-3"
+                                                        >
+                                                            <div className="space-y-1">
+                                                                <h3 className="font-medium leading-none text-primary">
+                                                                    [{wr.type === 'LEAVE' ? '휴가' : '재택'}] {wr.type === 'LEAVE' ? '휴가 신청' : '재택근무 신청'}
+                                                                </h3>
+                                                                <p className="text-sm text-muted-foreground line-clamp-1">
+                                                                    {wr.reason || "사유 없음"}
+                                                                </p>
+                                                            </div>
+                                                            <div className="text-xs text-primary-foreground px-2 py-1 bg-primary rounded">
+                                                                {wr.status}
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                     {filteredTasks.map((task) => (
                                                         <div
                                                             key={task.id}
@@ -190,10 +243,33 @@ export default function SchedulePage() {
                                     <CardContent className="overflow-y-auto max-h-[600px]">
                                         {loading ? (
                                             <div className="text-center py-10 text-muted-foreground">로딩 중...</div>
-                                        ) : filteredMonthlyTasks.length === 0 ? (
+                                        ) : (filteredMonthlyTasks.length === 0 && filteredMonthlyRequests.length === 0) ? (
                                             <div className="text-center py-10 text-muted-foreground">이번 달 일정이 없습니다.</div>
                                         ) : (
                                             <div className="space-y-3">
+                                                {filteredMonthlyRequests.map((wr) => (
+                                                    <div
+                                                        key={`mwr-${wr.id}`}
+                                                        className="flex items-center justify-between rounded-lg border border-primary/20 bg-primary/5 p-3"
+                                                    >
+                                                        <div className="space-y-1">
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-xs font-bold text-primary border px-1 rounded bg-primary/10">
+                                                                    {format(parseISO(wr.startDate), "d일")}
+                                                                </span>
+                                                                <h3 className="font-medium leading-none text-primary">
+                                                                    [{wr.type === 'LEAVE' ? '휴가' : '재택'}] {wr.type === 'LEAVE' ? '휴가 신청' : '재택근무 신청'}
+                                                                </h3>
+                                                            </div>
+                                                            <p className="text-sm text-muted-foreground line-clamp-1">
+                                                                {wr.reason || "사유 없음"}
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-xs text-primary-foreground px-2 py-1 bg-primary rounded">
+                                                            {wr.status}
+                                                        </div>
+                                                    </div>
+                                                ))}
                                                 {filteredMonthlyTasks.sort((a, b) => (a.dueDate || a.createdAt).localeCompare(b.dueDate || b.createdAt)).map((task) => (
                                                     <div
                                                         key={task.id}

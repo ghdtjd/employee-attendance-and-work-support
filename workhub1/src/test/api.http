@@ -1,0 +1,150 @@
+GET http://localhost:8080/api/board/7
+Accept: application/json
+
+###
+GET http://localhost:8080/api/board/list
+Accept: application/json
+
+
+
+
+###
+POST http://localhost:8080/api/board/add
+Content-Type: application/json
+
+
+{
+  "employeeId": 7,
+  "title": "테스트 공지",
+  "content": "테스트 내용",
+  "importance": "HIGH"
+}
+
+
+###
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "employeeNo" : "BA0119",
+  "password" : "r1r2r3r4"
+}
+
+###
+GET http://localhost:8080/api/userinfo/me
+Accept: application/json
+
+###
+### GET request to example server
+
+PUT http://localhost:8080/api/userinfo/me
+Content-Type: application/json
+
+{
+  "email" : "rjswh@rjswh.com",
+  "phone" : "010-4535-4445"
+
+}
+###
+PUT http://localhost:8080/api/userinfo/password
+Content-Type: application/json
+
+{
+  "currentPassword": "2222",
+  "newPassword": "r1r2r3r4"
+}
+
+###
+GET http://localhost:8080/api/task
+Content-Type: application/json
+
+{
+   "id": 1,
+    "employeeId": null,
+    "userId": null,
+    "departNo": null,
+    "title": "첫 번째 업무",
+    "description": "업무 설명",
+    "status": "TODO",
+    "priority": null,
+    "createdAt": "2026-01-30T10:30:00"
+}
+
+###
+GET http://localhost:8080/api/task/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "첫 번째 업무",
+  "description": "업무 설명",
+  "status": "TODO",
+  "createdAt": "2026-01-30T10:30:00"
+}
+
+### **4. 테스트**
+
+PUT http://localhost:8080/api/task/1
+Content-Type: application/json
+
+{
+  "title": "수정된 업무 제목",
+  "description": "수정된 설명",
+  "status": "IN_PROGRESS",
+  "priority": 1
+}
+GET http://localhost:8080/api/attendance/me
+
+###
+GET http://localhost:8080/api/attendance/me/api/attendance/me/period?startDate=2026-01-01&endDate=2026-01-31
+
+###
+POST http://localhost:8080/api/attendance/check-in
+Content-Type: application/json
+
+{
+  "notes": "정상 출근"
+}
+
+###
+GET http://localhost:8080/api/attendance/today
+
+###
+POST http://localhost:8080/api/attendance/check-out
+
+###
+GET http://localhost:8080/api/attendance/me
+
+
+POST
+
+Content-Type: application/json
+
+### 테스트
+
+DELETE http://localhost:8080/api/task/1
+
+###상태 변경
+PATCH http://localhost:8080/api/task/2/status
+Content-Type: application/json
+
+{
+  "status": "IN_PROGRESS"
+}
+
+
+
+###담당자 설정:
+PUT http://localhost:8080/api/task/2/assignee
+Content-Type: application/json
+
+{
+  "userId": 10
+}
+
+###
+GET http://localhost:8080/api/task
+
+###
+GET http://localhost:8080/api/admin/attendance
+

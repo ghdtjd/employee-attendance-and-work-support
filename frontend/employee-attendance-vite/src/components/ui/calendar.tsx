@@ -8,9 +8,10 @@ interface CalendarProps {
   selected?: Date
   onSelect?: (date: Date | undefined) => void
   className?: string
+  hasEvent?: (date: Date) => boolean
 }
 
-export function Calendar({ mode = 'single', selected, onSelect, className }: CalendarProps) {
+export function Calendar({ mode = 'single', selected, onSelect, className, hasEvent }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(selected || new Date())
 
   const monthNames = [
@@ -83,13 +84,19 @@ export function Calendar({ mode = 'single', selected, onSelect, className }: Cal
         key={day}
         variant={isSelected(day) ? 'default' : 'ghost'}
         className={cn(
-          'h-9 w-9 p-0 font-normal',
+          'h-9 w-9 p-0 font-normal relative',
           isToday(day) && !isSelected(day) && 'bg-accent text-accent-foreground',
           isSelected(day) && 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground'
         )}
         onClick={() => handleDateClick(day)}
       >
-        {day}
+        <span>{day}</span>
+        {hasEvent?.(new Date(currentDate.getFullYear(), currentDate.getMonth(), day)) && (
+          <div className={cn(
+            "absolute bottom-1 w-1 h-1 rounded-full",
+            isSelected(day) ? "bg-primary-foreground" : "bg-primary"
+          )} />
+        )}
       </Button>
     )
   }

@@ -3,15 +3,15 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-    fetchTasks,
-    deleteTask,
     fetchObjections,
     deleteObjection,
     adminFetchObjections,
     adminFetchRequests,
     adminApproveRequest,
     adminRejectRequest,
-    adminUpdateObjectionStatus
+    adminUpdateObjectionStatus,
+    fetchRequests,
+    deleteRequest,
 } from "@/lib/api"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -29,7 +29,7 @@ import { Badge } from "@/components/ui/badge"
 
 interface RequestItem {
     id: number
-    type: 'TASK' | 'OBJECTION'
+    type: 'TASK' | 'OBJECTION' | 'REQUEST'
     employeeNo?: string
     employeeName?: string
     title: string
@@ -49,22 +49,22 @@ export function RequestList({ isAdminMode = false }: RequestListProps) {
         setLoading(true)
         try {
             if (isAdminMode) {
-                const [adminTasks, adminObjections] = await Promise.all([
+                const [adminRequests, adminObjections] = await Promise.all([
                     adminFetchRequests(),
                     adminFetchObjections()
                 ])
 
-                const taskItems: RequestItem[] = adminTasks.map(t => ({
-                    id: t.id,
-                    type: 'TASK',
-                    employeeNo: t.employeeNo,
-                    employeeName: t.employeeName,
-                    title: t.title,
-                    description: t.description,
-                    status: t.status
+                const requestItems: RequestItem[] = adminRequests.map((wr: any) => ({
+                    id: wr.id,
+                    type: 'REQUEST',
+                    employeeNo: wr.employeeNo,
+                    employeeName: wr.employeeName,
+                    title: wr.title,
+                    description: wr.description,
+                    status: wr.status
                 }))
 
-                const objectionItems: RequestItem[] = adminObjections.map(o => ({
+                const objectionItems: RequestItem[] = adminObjections.map((o: any) => ({
                     id: o.id,
                     type: 'OBJECTION',
                     employeeNo: o.employeeNo,
@@ -74,24 +74,22 @@ export function RequestList({ isAdminMode = false }: RequestListProps) {
                     status: o.status
                 }))
 
-                setRequests([...taskItems, ...objectionItems].sort((a, b) => b.id - a.id))
+                setRequests([...requestItems, ...objectionItems].sort((a, b) => b.id - a.id))
             } else {
-                const [userTasks, userObjections] = await Promise.all([
-                    fetchTasks(),
+                const [userRequests, userObjections] = await Promise.all([
+                    fetchRequests(),
                     fetchObjections()
                 ])
 
-                const taskItems: RequestItem[] = userTasks
-                    .filter(t => t.title.startsWith('[휴가]') || t.title.startsWith('[재택]'))
-                    .map(t => ({
-                        id: t.id,
-                        type: 'TASK',
-                        title: t.title,
-                        description: t.description || '',
-                        status: t.status
-                    }))
+                const requestItems: RequestItem[] = userRequests.map((wr: any) => ({
+                    id: wr.id,
+                    type: 'REQUEST',
+                    title: wr.type === 'LEAVE' ? '[휴가] 휴가 신청' : '[재택] 재택근무 신청',
+                    description: `기간: ${wr.startDate} ~ ${wr.endDate}\n사유: ${wr.reason}`,
+                    status: wr.status
+                }))
 
-                const objectionItems: RequestItem[] = userObjections.map(o => ({
+                const objectionItems: RequestItem[] = userObjections.map((o: any) => ({
                     id: o.id,
                     type: 'OBJECTION',
                     title: '[이의신청] ' + o.category,
@@ -99,7 +97,7 @@ export function RequestList({ isAdminMode = false }: RequestListProps) {
                     status: o.status
                 }))
 
-                setRequests([...taskItems, ...objectionItems].sort((a, b) => b.id - a.id))
+                setRequests([...requestItems, ...objectionItems].sort((a, b) => b.id - a.id))
             }
         } catch (error) {
             console.error("Failed to load requests", error)
@@ -113,12 +111,12 @@ export function RequestList({ isAdminMode = false }: RequestListProps) {
         loadRequests()
     }, [isAdminMode])
 
-    const handleDelete = async (id: number, type: 'TASK' | 'OBJECTION') => {
+    const handleDelete = async (id: number, type: 'TASK' | 'OBJECTION' | 'REQUEST') => {
         if (!confirm("정말 삭제하시겠습니까?")) return
         try {
-            if (type === 'TASK') {
-                await deleteTask(id)
-            } else {
+            if (type === 'REQUEST') {
+                await deleteRequest(id)
+            } else if (type === 'OBJECTION') {
                 await deleteObjection(id)
             }
             toast.success("삭제되었습니다.")
@@ -128,9 +126,9 @@ export function RequestList({ isAdminMode = false }: RequestListProps) {
         }
     }
 
-    const handleApprove = async (id: number, type: 'TASK' | 'OBJECTION') => {
+    const handleApprove = async (id: number, type: 'TASK' | 'OBJECTION' | 'REQUEST') => {
         try {
-            if (type === 'TASK') {
+            if (type === 'REQUEST') {
                 await adminApproveRequest(id)
             } else {
                 await adminUpdateObjectionStatus(id, 'APPROVED')
@@ -142,9 +140,9 @@ export function RequestList({ isAdminMode = false }: RequestListProps) {
         }
     }
 
-    const handleReject = async (id: number, type: 'TASK' | 'OBJECTION') => {
+    const handleReject = async (id: number, type: 'TASK' | 'OBJECTION' | 'REQUEST') => {
         try {
-            if (type === 'TASK') {
+            if (type === 'REQUEST') {
                 await adminRejectRequest(id)
             } else {
                 await adminUpdateObjectionStatus(id, 'REJECTED')

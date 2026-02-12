@@ -15,7 +15,7 @@ const COLORS = {
     VACATION: "hsl(var(--chart-3))",
     ABSENT: "hsl(var(--chart-4))",
     OVERTIME: "hsl(var(--chart-5))",
-    EARLY_LEAVE: "hsl(var(--chart-2))", // Use same as LATE or distinct if available
+    EARLY_LEAVE: "hsl(var(--chart-6))",
 }
 
 const STATUS_LABELS: Record<string, string> = {

@@ -11,6 +11,24 @@ export interface Task {
     createdAt: string;
 }
 
+export interface AttendanceRequest {
+    id: number;
+    user: User;
+    type: "LEAVE" | "REMOTE";
+    startDate: string;
+    endDate: string;
+    reason: string;
+    status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+    createdAt: string;
+}
+
+export interface RequestCreateRequest {
+    type: "LEAVE" | "REMOTE";
+    startDate: string;
+    endDate: string;
+    reason: string;
+}
+
 const API_BASE_URL = "/api";
 
 export interface User {
@@ -380,6 +398,37 @@ export async function deleteObjection(id: number): Promise<void> {
     }
 }
 
+export async function createRequest(data: RequestCreateRequest): Promise<AttendanceRequest> {
+    const response = await fetch(`${API_BASE_URL}/requests`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to create request");
+    }
+    return response.json();
+}
+
+export async function fetchRequests(): Promise<AttendanceRequest[]> {
+    const response = await fetch(`${API_BASE_URL}/requests`);
+    if (!response.ok) {
+        throw new Error("Failed to fetch requests");
+    }
+    return response.json();
+}
+
+export async function deleteRequest(id: number): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/requests/${id}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+        throw new Error("Failed to delete request");
+    }
+}
+
 // Admin APIs
 export interface RegisterRequest {
     employeeNo: string;
@@ -506,7 +555,7 @@ export async function adminFetchRequests(): Promise<AdminRequestItem[]> {
     return res.json()
 }
 
-export async function adminApproveRequest(id: number): Promise<Task> {
+export async function adminApproveRequest(id: number): Promise<AttendanceRequest> {
     const res = await fetch(`${API_BASE_URL}/admin/requests/${id}/approve`, {
         method: 'PUT'
     })
@@ -514,7 +563,7 @@ export async function adminApproveRequest(id: number): Promise<Task> {
     return res.json()
 }
 
-export async function adminRejectRequest(id: number): Promise<Task> {
+export async function adminRejectRequest(id: number): Promise<AttendanceRequest> {
     const res = await fetch(`${API_BASE_URL}/admin/requests/${id}/reject`, {
         method: 'PUT'
     })

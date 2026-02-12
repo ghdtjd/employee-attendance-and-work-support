@@ -1,0 +1,16 @@
+package com.teamproject.workhub.repository.boardRepository;
+
+import com.teamproject.workhub.entity.boardEntity.Board;
+import com.teamproject.workhub.entity.boardEntity.Importance;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface BoardRepository extends JpaRepository<Board, Long> {
+    List<Board> findAllByOrderByCreatedAtDesc();
+
+
+    List<Board> findTop5ByImportanceOrderByCreatedAtDesc(Importance importance);
+
+
+}

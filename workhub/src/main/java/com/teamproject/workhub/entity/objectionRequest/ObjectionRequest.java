@@ -1,5 +1,6 @@
 package com.teamproject.workhub.entity.objectionRequest;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.teamproject.workhub.entity.userEntity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,16 +18,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class ObjectionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "attendanceDate")
     private LocalDate attendanceDate;
+
     private String category;
     private String reason;
 
@@ -37,6 +41,4 @@ public class ObjectionRequest {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
-
-    // Getters and Setters
 }

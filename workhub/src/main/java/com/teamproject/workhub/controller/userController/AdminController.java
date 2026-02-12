@@ -3,15 +3,17 @@ package com.teamproject.workhub.controller.userController;
 import com.teamproject.workhub.dto.adminDto.AdminDashboardStatsResponse;
 import com.teamproject.workhub.dto.employeeDto.AdminEmployeeUpdateRequest;
 import com.teamproject.workhub.entity.objectionRequest.ObjectionStatus;
-import com.teamproject.workhub.entity.taskEntity.Task;
 import com.teamproject.workhub.entity.userEntity.Role;
 import com.teamproject.workhub.entity.userEntity.User;
+import com.teamproject.workhub.entity.request.Request;
+import com.teamproject.workhub.entity.request.RequestStatus;
+import com.teamproject.workhub.entity.request.RequestType;
 import com.teamproject.workhub.repository.EmployeeRepository.EmployeeRepository;
 import com.teamproject.workhub.repository.attendanceRepository.AttendanceRepository;
 import com.teamproject.workhub.repository.objectionRepository.ObjectionRepository;
 import com.teamproject.workhub.service.objectionService.ObjectionService;
-import com.teamproject.workhub.service.taskService.TaskService;
 import com.teamproject.workhub.service.userService.UserService;
+import com.teamproject.workhub.service.request.RequestService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,7 @@ public class AdminController {
     private final AttendanceRepository attendanceRepository;
     private final ObjectionRepository objectionRepository;
     private final ObjectionService objectionService;
-    private final TaskService taskService;
+    private final RequestService requestService;
 
     @GetMapping("/stats")
     public ResponseEntity<?> getDashboardStats(HttpServletRequest request) {
@@ -126,26 +128,27 @@ public class AdminController {
         if (!isAdmin(request)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
         }
-        List<Task> allTasks = taskService.getAllTasks();
-        List<com.teamproject.workhub.dto.adminDto.AdminRequestResponse> response = allTasks.stream()
-                .filter(t -> t.getTitle().startsWith("[휴가]") || t.getTitle().startsWith("[재택]"))
-                .map(t -> {
-                    com.teamproject.workhub.entity.employeeEntity.Employee employee = null;
-                    if (t.getEmployeeId() != null) {
-                        employee = employeeRepository.findById(t.getEmployeeId()).orElse(null);
-                    }
+
+        List<Request> requests = requestService.getAllRequests();
+        List<com.teamproject.workhub.dto.adminDto.AdminRequestResponse> response = requests.stream()
+                .map(wr -> {
+                    com.teamproject.workhub.entity.employeeEntity.Employee employee = employeeRepository
+                            .findByUser(wr.getUser()).orElse(null);
                     return com.teamproject.workhub.dto.adminDto.AdminRequestResponse.builder()
-                            .id(t.getId())
-                            .type("TASK")
-                            .employeeNo(employee != null ? employee.getEmployeeNo() : "미지정")
-                            .employeeName(employee != null ? employee.getName() : "미지정")
-                            .title(t.getTitle())
-                            .description(t.getDescription())
-                            .status(t.getStatus().name())
-                            .createdAt(t.getCreatedAt())
+                            .id(wr.getId())
+                            .type("WORK_REQUEST")
+                            .employeeNo(wr.getUser().getEmployeeNo())
+                            .employeeName(employee != null ? employee.getName() : "알수없음")
+                            .title("[" + (wr.getType() == RequestType.LEAVE ? "휴가" : "재택") + "] "
+                                    + (wr.getType() == RequestType.LEAVE ? "휴가 신청" : "재택근무 신청"))
+                            .description(
+                                    "기간: " + wr.getStartDate() + " ~ " + wr.getEndDate() + "\n사유: " + wr.getReason())
+                            .status(wr.getStatus().name())
+                            .createdAt(wr.getCreatedAt())
                             .build();
                 })
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(response);
     }
 
@@ -155,7 +158,7 @@ public class AdminController {
         if (!isAdmin(request)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
         }
-        return ResponseEntity.ok(taskService.approveTask(id));
+        return ResponseEntity.ok(requestService.updateStatus(id, RequestStatus.APPROVED));
     }
 
     // 휴가/재택 신청 거절
@@ -164,7 +167,7 @@ public class AdminController {
         if (!isAdmin(request)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("관리자 권한이 필요합니다.");
         }
-        return ResponseEntity.ok(taskService.rejectTask(id));
+        return ResponseEntity.ok(requestService.updateStatus(id, RequestStatus.REJECTED));
     }
 
     private boolean isAdmin(HttpServletRequest request) {
